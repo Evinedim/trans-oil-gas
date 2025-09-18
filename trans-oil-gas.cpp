@@ -1,6 +1,6 @@
 #include <iostream>
 
-class Pipe {
+class Pipeline {
 private:
     std::string name;
     double length;
@@ -28,7 +28,21 @@ public:
         }
     }
 
-    Pipe(std::string p_name, double p_length, double p_diametr, bool p_is_repair = false) {
+    void getInfo() {
+        if (name == "Undefined") {
+            std::cout << "Pipeline has not been created yet!" << std::endl;
+        } else {
+            std::cout << getName() << std::endl;
+            std::cout << getLength() << std::endl;
+            std::cout << getDiameter() << std::endl;
+            std::cout << getStatus() << std::endl;
+        }
+    }
+
+    Pipeline(std::string p_name = "Undefined", 
+             double p_length = 0.0, 
+             int p_diametr = 0, 
+             bool p_is_repair = false) {
         name = p_name;
         length = p_length;
         diameter = p_diametr;
@@ -40,6 +54,7 @@ class CompressorStation {
 private:
     std::string name;
     int shops_count;
+    int shops_in_work;
     int station_class;
 
 public:
@@ -51,13 +66,29 @@ public:
         return "Shops count: " + std::to_string(shops_count);
     }
 
+    std::string getShopsInWork() const {
+        return "Shops in work: " + std::to_string(shops_in_work);
+    }
+
     std::string getStationClass() const {
         return "Station class: " + std::to_string(station_class);
     }
 
-    CompressorStation(std::string p_name, int p_shops_count, int p_station_class) {
+    void getInfo() {
+        if (name == "Undefined") {
+            std::cout << "Pipeline has not been created yet!" << std::endl;
+        } else {
+            std::cout << getName() << std::endl;
+            std::cout << getShopsCount() << std::endl;
+            std::cout << getShopsInWork() << std::endl;
+            std::cout << getStationClass() << std::endl;
+        }
+    }
+
+    CompressorStation(std::string p_name, int p_shops_count, int p_shops_in_work, int p_station_class) {
         name = p_name;
         shops_count = p_shops_count;
+        shops_in_work = p_shops_in_work;
         station_class = p_station_class;
     }
 };
@@ -81,40 +112,59 @@ public:
 
 int main()
 {
-    int choice;
-    Menu menu;
-    menu.showMenu();
+    Pipeline pipeline = Pipeline();
+    pipeline.getInfo();
+
+    // int choice;
+
+    // Menu menu;
+    // menu.showMenu();
     
-    do {
-        std::cin >> choice;
+    // do {
+    //     std::cin >> choice;
         
-        switch(choice) {
-            case 1:
-                std::cout << "[1]" << std::endl;
-                break;
-            case 2:
-                std::cout << "[2]" << std::endl;
-                break;
-            case 3:
-                std::cout << "[3]" << std::endl;
-                break;
-            case 4:
-                std::cout << "[4]" << std::endl;
-                break;
-            case 5:
-                std::cout << "[5]" << std::endl;
-                break;
-            case 6:
-                std::cout << "[6]" << std::endl;
-                break;
-            case 7:
-                std::cout << "[7]" << std::endl;
-                break;
-            default:
-                std::cout << std::endl << "Invalid choice! Try again!" << std::endl;
-                menu.showMenu();
-        }   
-    } while(choice != 0);
+    //     switch(choice) {
+    //         case 1: {
+    //             std::string name;
+    //             double length;
+    //             int diameter;
+                
+                
+    //             std::cout << std::endl; std::cout << "Name: "; std::cin >> name;
+
+    //             // std::cout << "Length: "; std::cin >> length;
+    //             // std::cout << "Diameter: "; std::cin >> diameter;
+                
+    //             Pipeline pipeline = Pipeline(name, length, diameter);
+
+    //             std::cout << std::endl << "Successful creation! Return to main menu!" << std::endl;
+                
+    //             menu.showMenu();
+    //             break;
+    //         }
+    //         case 2: 
+    //             std::cout << "[2]" << std::endl;
+    //             break;
+    //         case 3:
+    //             std::cout << "[3]" << std::endl;
+    //             break;
+    //         case 4:
+    //             std::cout << "[4]" << std::endl;
+    //             break;
+    //         case 5:
+    //             std::cout << "[5]" << std::endl;
+    //             break;
+    //         case 6:
+    //             std::cout << "[6]" << std::endl;
+    //             break;
+    //         case 7:
+    //             std::cout << "[7]" << std::endl;
+    //             break;
+    //         default:
+    //             std::cout << std::endl << "Invalid! Try again!" << std::endl;
+    //             menu.showMenu();
+    //     }   
+    // } while(choice != 0);
     
     return 0;
 }
