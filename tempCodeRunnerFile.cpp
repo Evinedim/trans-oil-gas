@@ -67,14 +67,10 @@ public:
     void showMenu() {
         std::cout << std::endl;
         std::cout <<  "Main menu" << std::endl;
-        std::cout << "[1] Create new pipeline" << std::endl;
-        std::cout << "[2] Create new compressor station" << std::endl;
-        std::cout << "[3] Show all objects" << std::endl;
-        std::cout << "[4] Edit pipeline" << std::endl;
-        std::cout << "[5] Edit compressor station" << std::endl;
-        std::cout << "[6] Save to file" << std::endl;
-        std::cout << "[7] Load from file" << std::endl;
-        std::cout << "[0] Exit" << std::endl;
+        std::cout << "[1]" << std::endl;
+        std::cout << "[2]" << std::endl;
+        std::cout << "[3]" << std::endl;
+        std::cout << "[4] Exit" << std::endl;
         std::cout << "Choose the option: ";
     }
 };
@@ -83,38 +79,26 @@ int main()
 {
     int choice;
     Menu menu;
-    menu.showMenu();
     
     do {
+        menu.showMenu();
         std::cin >> choice;
         
         switch(choice) {
             case 1:
                 std::cout << "[1]" << std::endl;
-                break;
             case 2:
-                std::cout << "[2]" << std::endl;
-                break;
+                std::cout << "[1]" << std::endl;
             case 3:
-                std::cout << "[3]" << std::endl;
-                break;
+                std::cout << "[1]" << std::endl;
             case 4:
-                std::cout << "[4]" << std::endl;
-                break;
-            case 5:
-                std::cout << "[5]" << std::endl;
-                break;
-            case 6:
-                std::cout << "[6]" << std::endl;
-                break;
-            case 7:
-                std::cout << "[7]" << std::endl;
-                break;
+                std::cout << "[1]" << std::endl;
             default:
-                std::cout << std::endl << "Invalid choice! Try again!" << std::endl;
-                menu.showMenu();
-        }   
-    } while(choice != 0);
+                std::cout << "[1]" << std::endl;
+        }
+        std::cout << std::endl;
+        
+    } while(choice != 4);
     
     return 0;
 }
