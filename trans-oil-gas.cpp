@@ -1,4 +1,24 @@
 #include <iostream>
+#include <string>
+
+
+int is_int(std::string str) {
+    try {
+        int num = std::stoi(str);
+        return std::to_string(num).length() == str.length();
+    } catch (...) {
+        return 0;
+    }
+}
+
+int is_double(std::string str) {
+    try {
+        double num = std::stod(str);
+        return 1;
+    } catch (...) {
+        return 0;
+    }
+}
 
 class Pipeline {
 private:
@@ -22,20 +42,23 @@ public:
 
     std::string getStatus() const {
         if (is_repair == false) {
-            return "Pipeline is not on repair";
+            return "Status: Pipeline is not on repair";
         } else {
-            return "Pipeline is on repair";
+            return "Status: Pipeline is on repair";
         }
     }
 
     void getInfo() {
-        if (name == "Undefined") {
+        if (name == "Undefined" || length == 0.0 || diameter == 0) {
             std::cout << "Pipeline has not been created yet!" << std::endl;
+            std::cout << "Return to main menu!" << std::endl;
         } else {
+            std::cout << "-------------Pipeline--------------" << std::endl;
             std::cout << getName() << std::endl;
             std::cout << getLength() << std::endl;
             std::cout << getDiameter() << std::endl;
             std::cout << getStatus() << std::endl;
+            std::cout << "-----------------------------------" << std::endl;
         }
     }
 
@@ -76,7 +99,7 @@ public:
 
     void getInfo() {
         if (name == "Undefined") {
-            std::cout << "Pipeline has not been created yet!" << std::endl;
+            std::cout << "Compressor station has not been created yet!" << std::endl;
         } else {
             std::cout << getName() << std::endl;
             std::cout << getShopsCount() << std::endl;
@@ -85,7 +108,10 @@ public:
         }
     }
 
-    CompressorStation(std::string p_name, int p_shops_count, int p_shops_in_work, int p_station_class) {
+    CompressorStation(std::string p_name = "Undefined", 
+                      int p_shops_count = 0, 
+                      int p_shops_in_work = 0, 
+                      int p_station_class = 0) {
         name = p_name;
         shops_count = p_shops_count;
         shops_in_work = p_shops_in_work;
@@ -97,7 +123,7 @@ class Menu {
 public:
     void showMenu() {
         std::cout << std::endl;
-        std::cout <<  "Main menu" << std::endl;
+        std::cout << "-------------Main menu-------------" << std::endl;
         std::cout << "[1] Create new pipeline" << std::endl;
         std::cout << "[2] Create new compressor station" << std::endl;
         std::cout << "[3] Show all objects" << std::endl;
@@ -106,65 +132,84 @@ public:
         std::cout << "[6] Save to file" << std::endl;
         std::cout << "[7] Load from file" << std::endl;
         std::cout << "[0] Exit" << std::endl;
+        std::cout << "-----------------------------------" << std::endl;
         std::cout << "Choose the option: ";
     }
 };
 
 int main()
 {
+    system("cls");
     Pipeline pipeline = Pipeline();
-    pipeline.getInfo();
-
-    // int choice;
-
-    // Menu menu;
-    // menu.showMenu();
+    CompressorStation compressorstation = CompressorStation();
+    // pipeline.getInfo();
+    int choice;
+    Menu menu;
     
-    // do {
-    //     std::cin >> choice;
+    do {
+        menu.showMenu();
+        std::cin >> choice;
         
-    //     switch(choice) {
-    //         case 1: {
-    //             std::string name;
-    //             double length;
-    //             int diameter;
-                
-                
-    //             std::cout << std::endl; std::cout << "Name: "; std::cin >> name;
+        switch(choice) {
+            case 1: {
+                system("cls");
 
-    //             // std::cout << "Length: "; std::cin >> length;
-    //             // std::cout << "Diameter: "; std::cin >> diameter;
-                
-    //             Pipeline pipeline = Pipeline(name, length, diameter);
+                std::string name;
+                std::string str_length;
+                std::string str_diameter;
+                double length;
+                int diameter;
 
-    //             std::cout << std::endl << "Successful creation! Return to main menu!" << std::endl;
+                std::cout << std::endl; std::cout << "Name[string]: "; std::cin >> name;
+
+                std::cout << "Length[double] ('km'): "; std::cin >> str_length;
+                if (!is_double(str_length)) {
+                    std::cout << std::endl << "Length must be double!" << std::endl;
+                    break;
+                }
+
+                std::cout << "Diameter[integer] ('mm): "; std::cin >> str_diameter;
+                if (!is_int(str_diameter)) {
+                    std::cout << std::endl << "Diameter mast be int! Return to main menu!" << std::endl;
+                    break;
+                }
                 
-    //             menu.showMenu();
-    //             break;
-    //         }
-    //         case 2: 
-    //             std::cout << "[2]" << std::endl;
-    //             break;
-    //         case 3:
-    //             std::cout << "[3]" << std::endl;
-    //             break;
-    //         case 4:
-    //             std::cout << "[4]" << std::endl;
-    //             break;
-    //         case 5:
-    //             std::cout << "[5]" << std::endl;
-    //             break;
-    //         case 6:
-    //             std::cout << "[6]" << std::endl;
-    //             break;
-    //         case 7:
-    //             std::cout << "[7]" << std::endl;
-    //             break;
-    //         default:
-    //             std::cout << std::endl << "Invalid! Try again!" << std::endl;
-    //             menu.showMenu();
-    //     }   
-    // } while(choice != 0);
+                length = std::stod(str_length), diameter = std::stoi(str_diameter);
+
+                pipeline = Pipeline(name, length, diameter);
+
+                system("cls");
+                std::cout << std::endl << "Successful creation! Return to main menu!" << std::endl;
+                
+                break;
+            }
+            case 2: 
+                std::cout << "[2]" << std::endl;
+                break;
+            case 3:
+                system("cls");
+                std::cout << std::endl;
+                pipeline.getInfo();
+                break;
+            case 4:
+                std::cout << "[4]" << std::endl;
+                break;
+            case 5:
+                std::cout << "[5]" << std::endl;
+                break;
+            case 6:
+                std::cout << "[6]" << std::endl;
+                break;
+            case 7:
+                std::cout << "[7]" << std::endl;
+                break;
+            case 0:
+                system("cls");
+                break;
+            default:
+                std::cout << std::endl << "Invalid! Try again!" << std::endl;
+        }   
+    } while(choice != 0);
     
     return 0;
 }
