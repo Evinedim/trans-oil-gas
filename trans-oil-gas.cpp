@@ -5,7 +5,7 @@
 int is_int(std::string str) {
     try {
         int num = std::stoi(str);
-        return std::to_string(num).length() == str.length();
+        return 1;
     } catch (...) {
         return 0;
     }
@@ -25,33 +25,50 @@ private:
     std::string name;
     double length;
     int diameter;
-    bool is_repair;
+    bool status;
 
 public:
     std::string getName() const {
         return "Name: " + name; 
     }
+
+    void setName(std::string p_name) {
+        name = p_name;
+    } 
     
     std::string getLength() const {
         return "Length: " + std::to_string(length) + " km"; 
     }
+
+    void setLength(double p_length) {
+        if (p_length < 0) {
+            std::cout << std::endl << "[Error] Length must be more then zero! Return to main menu!" << std::endl;
+        }  
+        length = p_length;
+    } 
 
     std::string getDiameter() const {
         return "Diameter: " + std::to_string(diameter) + " mm"; 
     }
 
     std::string getStatus() const {
-        if (is_repair == false) {
+        if (status == false) {
             return "Status: Pipeline is not on repair";
         } else {
             return "Status: Pipeline is on repair";
         }
     }
 
+    void setStatus(bool p_status) {
+        if (p_status != true && p_status != false) {
+            std::cout << std::endl << "[Error] Wrong status! Return to main menu!" << std::endl;
+        } 
+        status = p_status;
+    } 
+
     void getInfo() {
         if (name == "Undefined" || length == 0.0 || diameter == 0) {
-            std::cout << "Pipeline has not been created yet!" << std::endl;
-            std::cout << "Return to main menu!" << std::endl;
+            std::cout << "Pipeline has not been created yet or created with incorrect parameters!";
         } else {
             std::cout << "-------------Pipeline--------------" << std::endl;
             std::cout << getName() << std::endl;
@@ -64,12 +81,12 @@ public:
 
     Pipeline(std::string p_name = "Undefined", 
              double p_length = 0.0, 
-             int p_diametr = 0, 
-             bool p_is_repair = false) {
-        name = p_name;
+             int p_diameter = 0, 
+             bool p_status = false) {
+        setName(p_name);
         length = p_length;
-        diameter = p_diametr;
-        is_repair = p_is_repair;
+        diameter = p_diameter;
+        setStatus(p_status);
     }
 };
 
@@ -85,6 +102,10 @@ public:
         return "Name: " + name;
     }
 
+    void setName(std::string p_name) {
+        name = p_name;
+    }
+
     std::string getShopsCount() const {
         return "Shops count: " + std::to_string(shops_count);
     }
@@ -98,13 +119,15 @@ public:
     }
 
     void getInfo() {
-        if (name == "Undefined") {
-            std::cout << "Compressor station has not been created yet!" << std::endl;
+        if (name == "Undefined" || shops_count == 0 || shops_in_work == 0 || station_class == 0) {
+            std::cout << "Compressor station has not been created yet or created with incorrect parameters!";
         } else {
+            std::cout << "--------Compressor station---------" << std::endl;
             std::cout << getName() << std::endl;
             std::cout << getShopsCount() << std::endl;
             std::cout << getShopsInWork() << std::endl;
             std::cout << getStationClass() << std::endl;
+            std::cout << "-----------------------------------" << std::endl;
         }
     }
 
@@ -141,8 +164,8 @@ int main()
 {
     system("cls");
     Pipeline pipeline = Pipeline();
+
     CompressorStation compressorstation = CompressorStation();
-    // pipeline.getInfo();
     int choice;
     Menu menu;
     
@@ -154,42 +177,96 @@ int main()
             case 1: {
                 system("cls");
 
-                std::string name;
-                std::string str_length;
-                std::string str_diameter;
-                double length;
-                int diameter;
+                std::string name, str_length, str_diameter;
 
-                std::cout << std::endl; std::cout << "Name[string]: "; std::cin >> name;
+                double length; int diameter;
 
-                std::cout << "Length[double] ('km'): "; std::cin >> str_length;
+                std::cout << std::endl; std::cout << "Name: "; std::cin >> name;
+
+                std::cout << "Length ('km'): "; std::cin >> str_length;
                 if (!is_double(str_length)) {
-                    std::cout << std::endl << "Length must be double!" << std::endl;
+                    std::cout << std::endl << "[Error] Length must be double! Return to main menu!" << std::endl;
+                    break;
+                }
+                length = std::stod(str_length);
+                if (length < 0) {
+                    std::cout << std::endl << "[Error] Length must be more than zero! Return to main menu!" << std::endl;
                     break;
                 }
 
-                std::cout << "Diameter[integer] ('mm): "; std::cin >> str_diameter;
+                std::cout << "Diameter ('mm'): "; std::cin >> str_diameter;
                 if (!is_int(str_diameter)) {
-                    std::cout << std::endl << "Diameter mast be int! Return to main menu!" << std::endl;
+                    std::cout << std::endl << "[Error] Diameter must be integer! Return to main menu!" << std::endl;
                     break;
                 }
-                
-                length = std::stod(str_length), diameter = std::stoi(str_diameter);
-
-                pipeline = Pipeline(name, length, diameter);
+                diameter = std::stod(str_diameter);
+                if (diameter < 0) {
+                    std::cout << std::endl << "[Error] Diameter must be more than zero! Return to main menu!" << std::endl;
+                    break;
+                }
 
                 system("cls");
+                pipeline = Pipeline(name, length, diameter);
                 std::cout << std::endl << "Successful creation! Return to main menu!" << std::endl;
-                
                 break;
             }
-            case 2: 
-                std::cout << "[2]" << std::endl;
+            case 2: {
+                system("cls");
+
+                std::string name, str_shops_count, str_shops_in_work, str_station_class;
+
+                int shops_count, shops_in_work, station_class;
+
+                std::cout << std::endl; std::cout << "Name: "; std::cin >> name;
+
+                std::cout << "Count of shops: "; std::cin >> str_shops_count;
+                if (!is_int(str_shops_count)) {
+                    std::cout << std::endl << "[Error] Count of shops must be integer! Return to main menu!" << std::endl;
+                    break;
+                }
+                shops_count = std::stoi(str_shops_count);
+                if (shops_count < 0) {
+                    std::cout << std::endl << "[Error] Count of shops must be more than zero! Return to main menu!" << std::endl;
+                    break;
+                }
+
+                std::cout << "Count of working shops: "; std::cin >> str_shops_in_work;
+                if (!is_int(str_shops_in_work)) {
+                    std::cout << std::endl << "[Error] Count of working shops mast be integer! Return to main menu!" << std::endl;
+                    break;
+                }
+                if (shops_in_work < 0) {
+                    std::cout << std::endl << "[Error] Count of shops must be more than zero! Return to main menu!" << std::endl;
+                    break;
+                }
+                shops_in_work = std::stoi(str_shops_in_work);
+                if (shops_count < shops_in_work) {
+                    std::cout << std::endl << "[Error] Count of working shops mast be less then count of shops! Return to main menu!" << std::endl;
+                    break;
+                }
+                
+                std::cout << "Class of compressor station [1-10]: "; std::cin >> str_station_class;
+                if (!is_int(str_station_class)) {
+                    std::cout << std::endl << "[Error] Class of compressor station mast be integer! Return to main menu!" << std::endl;
+                    break;
+                }
+                station_class = std::stoi(str_station_class);
+
+                compressorstation = CompressorStation(name, shops_count, shops_in_work, station_class);
+
+                system("cls");
+                compressorstation = CompressorStation(name, shops_count, shops_in_work, station_class);
+                std::cout << std::endl << "Successful creation! Return to main menu!" << std::endl;
                 break;
+            }
             case 3:
                 system("cls");
                 std::cout << std::endl;
                 pipeline.getInfo();
+                std::cout << std::endl;
+                compressorstation.getInfo();
+                std::cout << std::endl;
+                std::cout << "Return to main menu!" << std::endl;
                 break;
             case 4:
                 std::cout << "[4]" << std::endl;
