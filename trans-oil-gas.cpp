@@ -116,7 +116,7 @@ public:
         if (name == "Undefined" || shops_count == 0 || shops_in_work == 0 || station_class == 0) {
             std::cout << "Compressor station has not been created yet or created with incorrect parameters!";
         } else {
-            std::cout << "--------Compressor station---------" << std::endl;
+            std::cout << std::endl << "--------Compressor station---------" << std::endl;
             std::cout << "Name: " << getName() << std::endl;
             std::cout << "Shops count: " << getShopsCount() << std::endl;
             std::cout << "Shops in work: " << getShopsInWork() << std::endl;
@@ -129,9 +129,9 @@ public:
                       int p_shops_count = 0, 
                       int p_shops_in_work = 0, 
                       int p_station_class = 0) {
-        name = p_name;
+        setName(p_name);
         shops_count = p_shops_count;
-        setShopsInWork(shops_in_work);
+        setShopsInWork(p_shops_in_work);
         station_class = p_station_class;
     }
 };
@@ -153,13 +153,23 @@ public:
         std::cout << "Choose the option: ";
     }
 
-    void showEditPipelineMenu() {
+    void showPipelineEditMenu() {
         std::cout << std::endl;
         std::cout << "--------Edit pipeline menu--------" << std::endl;
         std::cout << "[1] Edit name" << std::endl;
         std::cout << "[2] Edit status" << std::endl;
         std::cout << "[0] Exit" << std::endl;
         std::cout << "-----------------------------------" << std::endl;
+        std::cout << "Choose the option: ";
+    }
+
+    void showCompressorStationEditMenu() {
+        std::cout << std::endl;
+        std::cout << "----Edit compressor station menu----" << std::endl;
+        std::cout << "[1] Edit name" << std::endl;
+        std::cout << "[2] Edit count of working shops" << std::endl;
+        std::cout << "[0] Exit" << std::endl;
+        std::cout << "------------------------------------" << std::endl;
         std::cout << "Choose the option: ";
     }
 };
@@ -239,11 +249,11 @@ int main()
                     std::cout << std::endl << "[Error] Count of working shops mast be integer! Return to main menu!" << std::endl;
                     break;
                 }
+                shops_in_work = std::stoi(str_shops_in_work);
                 if (shops_in_work < 0) {
                     std::cout << std::endl << "[Error] Count of shops must be more than zero! Return to main menu!" << std::endl;
                     break;
                 }
-                shops_in_work = std::stoi(str_shops_in_work);
                 if (shops_count < shops_in_work) {
                     std::cout << std::endl << "[Error] Count of working shops mast be less then count of shops! Return to main menu!" << std::endl;
                     break;
@@ -255,8 +265,6 @@ int main()
                     break;
                 }
                 station_class = std::stoi(str_station_class);
-
-                compressorstation = CompressorStation(name, shops_count, shops_in_work, station_class);
 
                 system("cls");
                 compressorstation = CompressorStation(name, shops_count, shops_in_work, station_class);
@@ -284,7 +292,7 @@ int main()
                     break;
                 }
                 do {
-                    menu.showEditPipelineMenu();
+                    menu.showPipelineEditMenu();
                     std::cin >> pipeline_choice;
                     switch(pipeline_choice) {
                         case 1: {
@@ -316,6 +324,50 @@ int main()
                 break;
             }
             case 5:
+                system("cls");
+                int cs_choice;
+
+                if (compressorstation.getName() == "Undefined") {
+                    std::cout << "There is nothing to change!" << std::endl;
+                    std::cout << "Compressor station has not been created yet or created with incorrect parameters!" << std::endl;
+                    std::cout << "Return to main menu!" << std::endl;
+                    break;
+                }
+                do {
+                    menu.showCompressorStationEditMenu();
+                    std::cin >> cs_choice;
+                    switch(cs_choice) {
+                        case 1: {
+                            system("cls");
+                            std::string name;
+                            std::cout << std::endl; std::cout << "New name: "; std::cin >> name;
+                            compressorstation.setName(name);
+                            std::cout << "Name has been changed! Return to edit menu!" << std::endl;
+                            break;
+                        }
+                        case 2: {
+                            system("cls");
+                            int shops_in_work;
+                            std::cout << std::endl; std::cout << "New count: "; std::cin >> shops_in_work;
+                            if (shops_in_work < compressorstation.getShopsCount()) {
+                                compressorstation.setShopsInWork(shops_in_work);
+                            } else {
+                                std::cout << "[Error] Count of working shops must be less then count of shops! Return to edit menu!" << std::endl;
+                                break;
+                            }
+                            std::cout << "Count of working shops has been changed! Return to edit menu!" << std::endl;
+                            break;
+                        }
+                        case 0: {
+                            system("cls");
+                            break;
+                        }
+                        default:
+                            std::cout << std::endl << "Invalid! Try again!" << std::endl;
+                    }
+                } while (cs_choice != 0);
+                break;
+
                 std::cout << "[5]" << std::endl;
                 break;
             case 6:
