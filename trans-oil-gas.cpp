@@ -40,13 +40,6 @@ public:
         return "Length: " + std::to_string(length) + " km"; 
     }
 
-    void setLength(double p_length) {
-        if (p_length < 0) {
-            std::cout << std::endl << "[Error] Length must be more then zero! Return to main menu!" << std::endl;
-        }  
-        length = p_length;
-    } 
-
     std::string getDiameter() const {
         return "Diameter: " + std::to_string(diameter) + " mm"; 
     }
@@ -158,6 +151,16 @@ public:
         std::cout << "-----------------------------------" << std::endl;
         std::cout << "Choose the option: ";
     }
+
+    void showEditPipelineMenu() {
+        std::cout << std::endl;
+        std::cout << "--------Edit pipeline menu--------" << std::endl;
+        std::cout << "[1] Edit name" << std::endl;
+        std::cout << "[2] Edit status" << std::endl;
+        std::cout << "[0] Exit" << std::endl;
+        std::cout << "-----------------------------------" << std::endl;
+        std::cout << "Choose the option: ";
+    }
 };
 
 int main()
@@ -259,7 +262,7 @@ int main()
                 std::cout << std::endl << "Successful creation! Return to main menu!" << std::endl;
                 break;
             }
-            case 3:
+            case 3: {
                 system("cls");
                 std::cout << std::endl;
                 pipeline.getInfo();
@@ -268,9 +271,41 @@ int main()
                 std::cout << std::endl;
                 std::cout << "Return to main menu!" << std::endl;
                 break;
-            case 4:
-                std::cout << "[4]" << std::endl;
+            }
+            case 4: {
+                system("cls");
+                int pipeline_choice;
+                do {
+                    menu.showEditPipelineMenu();
+                    std::cin >> pipeline_choice;
+                    switch(pipeline_choice) {
+                        case 1: {
+                            system("cls");
+                            std::string name;
+                            std::cout << std::endl; std::cout << "New name: "; std::cin >> name;
+                            pipeline.setName(name);
+                            std::cout << "Name has been changed! Return to edit menu!" << std::endl;
+                            break;
+                        }
+                        case 2: {
+                            system("cls");
+                            if (pipeline.getStatus() == "Status: Pipeline is not on repair") {
+                                pipeline.setStatus(true);
+                            } else {
+                                pipeline.setStatus(false);
+                            }
+                            std::cout << "Status has been changed! Return to edit menu!" << std::endl;
+                        }
+                        case 0: {
+                            system("cls");
+                            break;
+                        }
+                        default:
+                            std::cout << std::endl << "Invalid! Try again!" << std::endl;
+                    }
+                } while (pipeline_choice != 0);
                 break;
+            }
             case 5:
                 std::cout << "[5]" << std::endl;
                 break;
@@ -286,7 +321,7 @@ int main()
             default:
                 std::cout << std::endl << "Invalid! Try again!" << std::endl;
         }   
-    } while(choice != 0);
+    } while (choice != 0);
     
     return 0;
 }
