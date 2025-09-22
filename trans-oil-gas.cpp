@@ -29,33 +29,30 @@ private:
 
 public:
     std::string getName() const {
-        return "Name: " + name; 
+        return name; 
     }
 
     void setName(std::string p_name) {
         name = p_name;
     } 
     
-    std::string getLength() const {
-        return "Length: " + std::to_string(length) + " km"; 
+    int getLength() const {
+        return length; 
     }
 
-    std::string getDiameter() const {
-        return "Diameter: " + std::to_string(diameter) + " mm"; 
+    int getDiameter() const {
+        return diameter; 
     }
 
     std::string getStatus() const {
         if (status == false) {
-            return "Status: Pipeline is not on repair";
+            return "Status: pipeline is not on repair";
         } else {
-            return "Status: Pipeline is on repair";
+            return "Status: pipeline is on repair";
         }
     }
 
     void setStatus(bool p_status) {
-        if (p_status != true && p_status != false) {
-            std::cout << std::endl << "[Error] Wrong status! Return to main menu!" << std::endl;
-        } 
         status = p_status;
     } 
 
@@ -64,9 +61,9 @@ public:
             std::cout << "Pipeline has not been created yet or created with incorrect parameters!";
         } else {
             std::cout << "-------------Pipeline--------------" << std::endl;
-            std::cout << getName() << std::endl;
-            std::cout << getLength() << std::endl;
-            std::cout << getDiameter() << std::endl;
+            std::cout << "Name: " << getName() << std::endl;
+            std::cout << "Length: " << getLength() << " km" << std::endl;
+            std::cout << "Diameter: " << getDiameter() << " mm" << std::endl;
             std::cout << getStatus() << std::endl;
             std::cout << "-----------------------------------" << std::endl;
         }
@@ -92,23 +89,27 @@ private:
 
 public:
     std::string getName() const {
-        return "Name: " + name;
+        return name;
     }
 
     void setName(std::string p_name) {
         name = p_name;
     }
 
-    std::string getShopsCount() const {
-        return "Shops count: " + std::to_string(shops_count);
+    int getShopsCount() const {
+        return shops_count;
     }
 
-    std::string getShopsInWork() const {
-        return "Shops in work: " + std::to_string(shops_in_work);
+    int getShopsInWork() const {
+        return shops_in_work;
     }
 
-    std::string getStationClass() const {
-        return "Station class: " + std::to_string(station_class);
+    void setShopsInWork(int p_shops_in_work) {
+        shops_in_work = p_shops_in_work;
+    }
+
+    int getStationClass() const {
+        return station_class;
     }
 
     void getInfo() {
@@ -116,10 +117,10 @@ public:
             std::cout << "Compressor station has not been created yet or created with incorrect parameters!";
         } else {
             std::cout << "--------Compressor station---------" << std::endl;
-            std::cout << getName() << std::endl;
-            std::cout << getShopsCount() << std::endl;
-            std::cout << getShopsInWork() << std::endl;
-            std::cout << getStationClass() << std::endl;
+            std::cout << "Name: " << getName() << std::endl;
+            std::cout << "Shops count: " << getShopsCount() << std::endl;
+            std::cout << "Shops in work: " << getShopsInWork() << std::endl;
+            std::cout << "Station class: " << getStationClass() << std::endl;
             std::cout << "-----------------------------------" << std::endl;
         }
     }
@@ -130,7 +131,7 @@ public:
                       int p_station_class = 0) {
         name = p_name;
         shops_count = p_shops_count;
-        shops_in_work = p_shops_in_work;
+        setShopsInWork(shops_in_work);
         station_class = p_station_class;
     }
 };
@@ -275,6 +276,13 @@ int main()
             case 4: {
                 system("cls");
                 int pipeline_choice;
+
+                if (pipeline.getName() == "Undefined") {
+                    std::cout << "There is nothing to change!" << std::endl;
+                    std::cout << "Pipeline has not been created yet or created with incorrect parameters!" << std::endl;
+                    std::cout << "Return to main menu!" << std::endl;
+                    break;
+                }
                 do {
                     menu.showEditPipelineMenu();
                     std::cin >> pipeline_choice;
@@ -289,12 +297,13 @@ int main()
                         }
                         case 2: {
                             system("cls");
-                            if (pipeline.getStatus() == "Status: Pipeline is not on repair") {
+                            if (pipeline.getStatus() == "Status: pipeline is not on repair") {
                                 pipeline.setStatus(true);
                             } else {
                                 pipeline.setStatus(false);
                             }
                             std::cout << "Status has been changed! Return to edit menu!" << std::endl;
+                            break;
                         }
                         case 0: {
                             system("cls");
@@ -315,13 +324,14 @@ int main()
             case 7:
                 std::cout << "[7]" << std::endl;
                 break;
-            case 0:
+            case 0: {
                 system("cls");
                 break;
+            }
             default:
                 std::cout << std::endl << "Invalid! Try again!" << std::endl;
         }   
     } while (choice != 0);
-    
+
     return 0;
 }
