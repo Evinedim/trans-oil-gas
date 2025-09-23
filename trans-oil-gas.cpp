@@ -23,117 +23,115 @@ int is_double(std::string str) {
 
 class Pipeline {
 private:
-    std::string name;
     double length;
     int diameter;
+
+public:    
+    std::string name;
     bool status;
-
-public:
-    std::string getName() const {
-        return name; 
-    }
-
-    void setName(std::string p_name) {
-        name = p_name;
-    } 
-    
-    int getLength() const {
-        return length; 
-    }
-
-    int getDiameter() const {
-        return diameter; 
-    }
-
-    std::string getStatus() const {
-        if (status == false) {
-            return "Status: pipeline is not on repair";
-        } else {
-            return "Status: pipeline is on repair";
-        }
-    }
-
-    void setStatus(bool p_status) {
-        status = p_status;
-    } 
 
     void getInfo() {
         if (name == "Undefined" || length == 0.0 || diameter == 0) {
-            std::cout << "Pipeline has not been created yet or created with incorrect parameters!";
+            std::cout << "Pipeline has not been created yet or created with incorrect parameters!" << std::endl;
         } else {
-            std::cout << "-------------Pipeline--------------" << std::endl;
-            std::cout << "Name: " << getName() << std::endl;
-            std::cout << "Length: " << getLength() << " km" << std::endl;
-            std::cout << "Diameter: " << getDiameter() << " mm" << std::endl;
-            std::cout << getStatus() << std::endl;
+            std::cout << std::endl << "-------------Pipeline--------------" << std::endl;
+            std::cout << "Name: " << name << std::endl;
+            std::cout << "Length: " << length << " km" << std::endl;
+            std::cout << "Diameter: " << diameter << " mm" << std::endl;
+            if (status == false) {
+                std::cout << "Status: pipeline is not on repair" << std::endl;
+            } else {
+                std::cout << "Status: pipeline is on repair" << std::endl;
+            }
             std::cout << "-----------------------------------" << std::endl;
         }
     }
 
-    Pipeline(std::string p_name = "Undefined", 
-             double p_length = 0.0, 
-             int p_diameter = 0, 
-             bool p_status = false) {
-        setName(p_name);
-        length = p_length;
-        diameter = p_diameter;
-        setStatus(p_status);
+    void saveToFile(std::string filename) {
+        std::ofstream file(filename);
+        if (file.is_open()) {
+            file << "P," << name << "," << length << "," << diameter << "," << status << std::endl;
+        }
+        file.close();
+        std::cout << "Pipeline was successfully saved!" << std::endl;
+    }
+
+    void loadFromFile(std::string filename) {
+        std::ifstream file("save-load-file.txt");
+        std::vector<std::string> lines;
+        std::string line;
+        int current_line = 1;
+        if (file.is_open()) {
+            while (std::getline(file, line, ',')) {
+                if (current_line >= 2 && current_line <= 4) {
+                    lines.push_back(line);
+                }
+                current_line++;
+            }
+        }
+        name = lines[0]; length = std::stod(lines[1]); diameter = std::stoi(lines[2]);
+        file.close();
+        std::cout << "Pipeline was successfully loaded!" << std::endl;
+    }
+
+    Pipeline(std::string p_name = "Undefined", double p_length = 0.0, int p_diameter = 0, bool p_status = false) {
+        name = p_name; length = p_length; diameter = p_diameter; status = p_status;
     }
 };
 
 class CompressorStation {
 private:
-    std::string name;
     int shops_count;
-    int shops_in_work;
     int station_class;
 
 public:
-    std::string getName() const {
-        return name;
-    }
+    std::string name;
+    int shops_in_work;
 
-    void setName(std::string p_name) {
-        name = p_name;
-    }
-
-    int getShopsCount() const {
-        return shops_count;
-    }
-
-    int getShopsInWork() const {
-        return shops_in_work;
-    }
-
-    void setShopsInWork(int p_shops_in_work) {
-        shops_in_work = p_shops_in_work;
-    }
-
-    int getStationClass() const {
-        return station_class;
-    }
+    int getShopsCount() { return shops_count; }
 
     void getInfo() {
         if (name == "Undefined" || shops_count == 0 || shops_in_work == 0 || station_class == 0) {
-            std::cout << "Compressor station has not been created yet or created with incorrect parameters!";
+            std::cout << "Compressor station has not been created yet or created with incorrect parameters!" << std::endl;
         } else {
             std::cout << std::endl << "--------Compressor station---------" << std::endl;
-            std::cout << "Name: " << getName() << std::endl;
-            std::cout << "Shops count: " << getShopsCount() << std::endl;
-            std::cout << "Shops in work: " << getShopsInWork() << std::endl;
-            std::cout << "Station class: " << getStationClass() << std::endl;
+            std::cout << "Name: " << name << std::endl;
+            std::cout << "Shops count: " << shops_count << std::endl;
+            std::cout << "Shops in work: " << shops_in_work << std::endl;
+            std::cout << "Station class: " << station_class << std::endl;
             std::cout << "-----------------------------------" << std::endl;
         }
     }
 
-    CompressorStation(std::string p_name = "Undefined", 
-                      int p_shops_count = 0, 
-                      int p_shops_in_work = 0, 
-                      int p_station_class = 0) {
-        setName(p_name);
-        shops_count = p_shops_count;
-        setShopsInWork(p_shops_in_work);
-        station_class = p_station_class;
+    void saveToFile(std::string filename) {
+        std::ofstream file(filename, std::ios::app);
+        if (file.is_open()) {
+            file << "CS," << name << "," << shops_count << "," << shops_in_work << "," << station_class << std::endl;
+        }
+        file.close();
+        std::cout << "Compressor station was successfully saved!" << std::endl;
+    }
+
+    void loadFromFile(std::string filename) {
+        std::ifstream file(filename);
+        std::vector<std::string> lines;
+        std::string line;
+        int current_line = 1;
+        if (file.is_open()) {
+            while (std::getline(file, line, ',')) {
+                if (current_line >= 6 && current_line <= 9) {
+                    lines.push_back(line);
+                }
+                current_line++;
+            }
+        }
+        name = lines[0]; shops_count = std::stoi(lines[1]); shops_in_work = std::stoi(lines[2]); station_class = std::stoi(lines[3]);
+        file.close();
+        std::cout << "Compressor station was successfully loaded!" << std::endl;
+    }
+
+    CompressorStation(std::string p_name = "Undefined", int p_shops_count = 0, int p_shops_in_work = 0, int p_station_class = 0) {
+        name = p_name; shops_count = p_shops_count; shops_in_work = p_shops_in_work; station_class = p_station_class;
     }
 };
 
@@ -190,9 +188,7 @@ int main()
         switch(choice) {
             case 1: {
                 system("cls");
-
                 std::string name, str_length, str_diameter;
-
                 double length; int diameter;
 
                 std::cout << std::endl; std::cout << "Name: "; std::cin >> name;
@@ -213,22 +209,19 @@ int main()
                     std::cout << std::endl << "[Error] Diameter must be integer! Return to main menu!" << std::endl;
                     break;
                 }
-                diameter = std::stod(str_diameter);
+                diameter = std::stoi(str_diameter);
                 if (diameter < 0) {
                     std::cout << std::endl << "[Error] Diameter must be more than zero! Return to main menu!" << std::endl;
                     break;
                 }
 
-                system("cls");
                 pipeline = Pipeline(name, length, diameter);
                 std::cout << std::endl << "Successful creation! Return to main menu!" << std::endl;
                 break;
             }
             case 2: {
                 system("cls");
-
                 std::string name, str_shops_count, str_shops_in_work, str_station_class;
-
                 int shops_count, shops_in_work, station_class;
 
                 std::cout << std::endl; std::cout << "Name: "; std::cin >> name;
@@ -266,16 +259,13 @@ int main()
                 }
                 station_class = std::stoi(str_station_class);
 
-                system("cls");
                 compressorstation = CompressorStation(name, shops_count, shops_in_work, station_class);
                 std::cout << std::endl << "Successful creation! Return to main menu!" << std::endl;
                 break;
             }
             case 3: {
                 system("cls");
-                std::cout << std::endl;
                 pipeline.getInfo();
-                std::cout << std::endl;
                 compressorstation.getInfo();
                 std::cout << std::endl << "Return to main menu!" << std::endl;
                 break;
@@ -284,7 +274,7 @@ int main()
                 system("cls");
                 int pipeline_choice;
 
-                if (pipeline.getName() == "Undefined") {
+                if (pipeline.name == "Undefined") {
                     std::cout << "There is nothing to change!" << std::endl;
                     std::cout << "Pipeline has not been created yet or created with incorrect parameters!" << std::endl;
                     std::cout << "Return to main menu!" << std::endl;
@@ -298,17 +288,13 @@ int main()
                             system("cls");
                             std::string name;
                             std::cout << std::endl; std::cout << "New name: "; std::cin >> name;
-                            pipeline.setName(name);
+                            pipeline.name = name;
                             std::cout << "Name has been changed! Return to edit menu!" << std::endl;
                             break;
                         }
                         case 2: {
                             system("cls");
-                            if (pipeline.getStatus() == "Status: pipeline is not on repair") {
-                                pipeline.setStatus(true);
-                            } else {
-                                pipeline.setStatus(false);
-                            }
+                            pipeline.status = !pipeline.status;
                             std::cout << "Status has been changed! Return to edit menu!" << std::endl;
                             break;
                         }
@@ -322,11 +308,11 @@ int main()
                 } while (pipeline_choice != 0);
                 break;
             }
-            case 5:
+            case 5: {
                 system("cls");
                 int cs_choice;
 
-                if (compressorstation.getName() == "Undefined") {
+                if (compressorstation.name == "Undefined") {
                     std::cout << "There is nothing to change!" << std::endl;
                     std::cout << "Compressor station has not been created yet or created with incorrect parameters!" << std::endl;
                     std::cout << "Return to main menu!" << std::endl;
@@ -340,7 +326,7 @@ int main()
                             system("cls");
                             std::string name;
                             std::cout << std::endl; std::cout << "New name: "; std::cin >> name;
-                            compressorstation.setName(name);
+                            compressorstation.name = name;
                             std::cout << "Name has been changed! Return to edit menu!" << std::endl;
                             break;
                         }
@@ -349,7 +335,7 @@ int main()
                             int shops_in_work;
                             std::cout << std::endl; std::cout << "New count: "; std::cin >> shops_in_work;
                             if (shops_in_work < compressorstation.getShopsCount()) {
-                                compressorstation.setShopsInWork(shops_in_work);
+                                compressorstation.shops_in_work = shops_in_work;
                             } else {
                                 std::cout << "[Error] Count of working shops must be less then count of shops! Return to edit menu!" << std::endl;
                                 break;
@@ -366,40 +352,19 @@ int main()
                     }
                 } while (cs_choice != 0);
                 break;
+            }
             case 6: {
                 system("cls");
-                std::ofstream file;
-                file.open("save-file.txt");
-                if (file.is_open()) {
-                    file << "P" << ",";
-                    file << pipeline.getName() << ",";
-                    file << pipeline.getLength() << ",";
-                    file << pipeline.getDiameter() << ",";
-                    file << pipeline.getStatus() << std::endl;
-                    std::cout << "Pipeline was successfully saved!" << std::endl;
-
-                    file << "Cs" << ",";
-                    file << compressorstation.getName() << ",";
-                    file << compressorstation.getShopsCount() << ",";
-                    file << compressorstation.getShopsInWork() << ",";
-                    file << compressorstation.getStationClass();
-                    std::cout << "Compressor station was successfully saved!" << std::endl;
-                }
-                std::cout << "Return to main menu!" << std::endl;
-                file.close();
+                pipeline.saveToFile("save-load-file.txt");
+                compressorstation.saveToFile("save-load-file.txt");
+                std::cout << std::endl << "Return to main menu!" << std::endl;
                 break;
             }
             case 7: {
-                std::ifstream file("save-file.txt");
-                int n;
-                std::vector<std::string> lines;
-                std::string line;
-                while (std::getline(file, line, ',')) {
-                    lines.push_back(line);
-                }
-                pipeline = Pipeline(lines[1], std::stod(lines[2]), std::stoi(lines[3]));
-                compressorstation = CompressorStation(lines[6], std::stod(lines[7]), std::stod(lines[8]), std::stod(lines[9]));
-                file.close();
+                system("cls");
+                pipeline.loadFromFile("save-load-file.txt");
+                compressorstation.loadFromFile("save-load-file.txt");
+                std::cout<< std::endl << "Return to main menu!" << std::endl;
                 break;
             }
             case 0: {
