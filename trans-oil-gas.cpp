@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
-
+#include <fstream>
+#include <vector>
 
 int is_int(std::string str) {
     try {
@@ -155,11 +156,11 @@ public:
 
     void showPipelineEditMenu() {
         std::cout << std::endl;
-        std::cout << "--------Edit pipeline menu--------" << std::endl;
+        std::cout << "---------Edit pipeline menu---------" << std::endl;
         std::cout << "[1] Edit name" << std::endl;
         std::cout << "[2] Edit status" << std::endl;
         std::cout << "[0] Exit" << std::endl;
-        std::cout << "-----------------------------------" << std::endl;
+        std::cout << "------------------------------------" << std::endl;
         std::cout << "Choose the option: ";
     }
 
@@ -178,7 +179,6 @@ int main()
 {
     system("cls");
     Pipeline pipeline = Pipeline();
-
     CompressorStation compressorstation = CompressorStation();
     int choice;
     Menu menu;
@@ -277,8 +277,7 @@ int main()
                 pipeline.getInfo();
                 std::cout << std::endl;
                 compressorstation.getInfo();
-                std::cout << std::endl;
-                std::cout << "Return to main menu!" << std::endl;
+                std::cout << std::endl << "Return to main menu!" << std::endl;
                 break;
             }
             case 4: {
@@ -367,15 +366,42 @@ int main()
                     }
                 } while (cs_choice != 0);
                 break;
+            case 6: {
+                system("cls");
+                std::ofstream file;
+                file.open("save-file.txt");
+                if (file.is_open()) {
+                    file << "P" << ",";
+                    file << pipeline.getName() << ",";
+                    file << pipeline.getLength() << ",";
+                    file << pipeline.getDiameter() << ",";
+                    file << pipeline.getStatus() << std::endl;
+                    std::cout << "Pipeline was successfully saved!" << std::endl;
 
-                std::cout << "[5]" << std::endl;
+                    file << "Cs" << ",";
+                    file << compressorstation.getName() << ",";
+                    file << compressorstation.getShopsCount() << ",";
+                    file << compressorstation.getShopsInWork() << ",";
+                    file << compressorstation.getStationClass();
+                    std::cout << "Compressor station was successfully saved!" << std::endl;
+                }
+                std::cout << "Return to main menu!" << std::endl;
+                file.close();
                 break;
-            case 6:
-                std::cout << "[6]" << std::endl;
+            }
+            case 7: {
+                std::ifstream file("save-file.txt");
+                int n;
+                std::vector<std::string> lines;
+                std::string line;
+                while (std::getline(file, line, ',')) {
+                    lines.push_back(line);
+                }
+                pipeline = Pipeline(lines[1], std::stod(lines[2]), std::stoi(lines[3]));
+                compressorstation = CompressorStation(lines[6], std::stod(lines[7]), std::stod(lines[8]), std::stod(lines[9]));
+                file.close();
                 break;
-            case 7:
-                std::cout << "[7]" << std::endl;
-                break;
+            }
             case 0: {
                 system("cls");
                 break;
