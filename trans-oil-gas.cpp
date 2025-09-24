@@ -3,22 +3,13 @@
 #include <fstream>
 #include <vector>
 
-int is_int(std::string str) {
-    try {
-        int num = std::stoi(str);
-        return 1;
-    } catch (...) {
-        return 0;
+template<typename T> bool is_valid(T& value) {
+    if (std::cin >> value) {
+        return true;
     }
-}
-
-int is_double(std::string str) {
-    try {
-        double num = std::stod(str);
-        return 1;
-    } catch (...) {
-        return 0;
-    }
+    std::cin.clear();
+    std::cin.ignore();
+    return false;
 }
 
 class Pipeline {
@@ -188,30 +179,19 @@ int main()
         switch(choice) {
             case 1: {
                 system("cls");
-                std::string name, str_length, str_diameter;
-                double length; int diameter;
+                std::string name; double length; int diameter;
 
                 std::cout << std::endl; std::cout << "Name: "; std::cin >> name;
 
-                std::cout << "Length ('km'): "; std::cin >> str_length;
-                if (!is_double(str_length)) {
-                    std::cout << std::endl << "[Error] Length must be double! Return to main menu!" << std::endl;
-                    break;
-                }
-                length = std::stod(str_length);
-                if (length < 0) {
-                    std::cout << std::endl << "[Error] Length must be more than zero! Return to main menu!" << std::endl;
+                std::cout << "Length ('km'): ";
+                if (!is_valid(length) || length < 0) {
+                    std::cout << std::endl << "[Error] Length must be double and more than zero! Return to main menu!" << std::endl;
                     break;
                 }
 
-                std::cout << "Diameter ('mm'): "; std::cin >> str_diameter;
-                if (!is_int(str_diameter)) {
-                    std::cout << std::endl << "[Error] Diameter must be integer! Return to main menu!" << std::endl;
-                    break;
-                }
-                diameter = std::stoi(str_diameter);
-                if (diameter < 0) {
-                    std::cout << std::endl << "[Error] Diameter must be more than zero! Return to main menu!" << std::endl;
+                std::cout << "Diameter ('mm'): ";
+                if (!is_valid(diameter) || diameter < 0) {
+                    std::cout << std::endl << "[Error] Diameter must be integer and more than zero! Return to main menu!" << std::endl;
                     break;
                 }
 
@@ -221,43 +201,31 @@ int main()
             }
             case 2: {
                 system("cls");
-                std::string name, str_shops_count, str_shops_in_work, str_station_class;
-                int shops_count, shops_in_work, station_class;
+                std::string name; int shops_count, shops_in_work, station_class;
 
                 std::cout << std::endl; std::cout << "Name: "; std::cin >> name;
 
-                std::cout << "Count of shops: "; std::cin >> str_shops_count;
-                if (!is_int(str_shops_count)) {
-                    std::cout << std::endl << "[Error] Count of shops must be integer! Return to main menu!" << std::endl;
-                    break;
-                }
-                shops_count = std::stoi(str_shops_count);
-                if (shops_count < 0) {
-                    std::cout << std::endl << "[Error] Count of shops must be more than zero! Return to main menu!" << std::endl;
+                std::cout << "Count of shops: ";
+                if (!is_valid(shops_count) || shops_count < 0) {
+                    std::cout << std::endl << "[Error] Count of shops must be integer and more than zero! Return to main menu!" << std::endl;
                     break;
                 }
 
-                std::cout << "Count of working shops: "; std::cin >> str_shops_in_work;
-                if (!is_int(str_shops_in_work)) {
-                    std::cout << std::endl << "[Error] Count of working shops mast be integer! Return to main menu!" << std::endl;
-                    break;
-                }
-                shops_in_work = std::stoi(str_shops_in_work);
-                if (shops_in_work < 0) {
-                    std::cout << std::endl << "[Error] Count of shops must be more than zero! Return to main menu!" << std::endl;
+                std::cout << "Count of working shops: ";
+                if (!is_valid(shops_in_work) || shops_in_work < 0) {
+                    std::cout << std::endl << "[Error] Count of working shops must be integer and more than zero! Return to main menu!" << std::endl;
                     break;
                 }
                 if (shops_count < shops_in_work) {
-                    std::cout << std::endl << "[Error] Count of working shops mast be less then count of shops! Return to main menu!" << std::endl;
+                    std::cout << std::endl << "[Error] Count of working shops must be less then count of shops! Return to main menu!" << std::endl;
                     break;
                 }
                 
-                std::cout << "Class of compressor station [1-10]: "; std::cin >> str_station_class;
-                if (!is_int(str_station_class)) {
-                    std::cout << std::endl << "[Error] Class of compressor station mast be integer! Return to main menu!" << std::endl;
+                std::cout << "Class of compressor station [1-10]: ";
+                if (!is_valid(station_class) || 1 <= station_class <= 10) {
+                    std::cout << std::endl << "[Error] Class of compressor station must be integer in range [1-10]! Return to main menu!" << std::endl;
                     break;
                 }
-                station_class = std::stoi(str_station_class);
 
                 compressorstation = CompressorStation(name, shops_count, shops_in_work, station_class);
                 std::cout << std::endl << "Successful creation! Return to main menu!" << std::endl;
