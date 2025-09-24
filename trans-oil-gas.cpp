@@ -2,6 +2,7 @@
 #include <string>
 #include <fstream>
 #include <vector>
+#include <limits>
 
 template<typename T> bool is_valid(T& value) {
     if (std::cin >> value) {
@@ -29,9 +30,9 @@ public:
             std::cout << "Length: " << length << " km" << std::endl;
             std::cout << "Diameter: " << diameter << " mm" << std::endl;
             if (status == false) {
-                std::cout << "Status: pipeline is not on repair" << std::endl;
+                std::cout << "Status: not on repair" << std::endl;
             } else {
-                std::cout << "Status: pipeline is on repair" << std::endl;
+                std::cout << "Status: on repair" << std::endl;
             }
             std::cout << "-----------------------------------" << std::endl;
         }
@@ -152,7 +153,7 @@ public:
                     system("cls");
                     std::string name; double length; int diameter;
 
-                    std::cout << std::endl; std::cout << "Name: "; std::cin >> name;
+                    std::cout << std::endl << "Name: "; std::cin.ignore(); std::getline(std::cin, name);
 
                     std::cout << "Length ('km'): ";
                     if (!is_valid(length) || length < 0) {
@@ -174,8 +175,8 @@ public:
                     system("cls");
                     std::string name; int shops_count, shops_in_work, station_class;
 
-                    std::cout << std::endl; std::cout << "Name: "; std::cin >> name;
-
+                    std::cout << std::endl << "Name: "; std::cin.ignore(); std::getline(std::cin, name);
+                    
                     std::cout << "Count of shops: ";
                     if (!is_valid(shops_count) || shops_count < 0) {
                         std::cout << std::endl << "[Error] Count of shops must be integer and more than zero! Return to main menu!" << std::endl;
@@ -193,7 +194,7 @@ public:
                     }
                     
                     std::cout << "Class of compressor station [1-10]: ";
-                    if (!is_valid(station_class) || 1 <= station_class <= 10) {
+                    if (!is_valid(station_class) || station_class < 1 || station_class > 10) {
                         std::cout << std::endl << "[Error] Class of compressor station must be integer in range [1-10]! Return to main menu!" << std::endl;
                         break;
                     }
@@ -226,7 +227,6 @@ public:
                         std::cout << "There is nothing to change!" << std::endl;
                         std::cout << "Compressor station has not been created yet or created with incorrect parameters!" << std::endl;
                         std::cout << "Return to main menu!" << std::endl;
-                        break;
                     } else {
                         compressorEditMenu(compressorstation);
                     }
@@ -275,7 +275,7 @@ public:
                 case 1: {
                     system("cls");
                     std::string name;
-                    std::cout << std::endl; std::cout << "New name: "; std::cin >> name;
+                    std::cout << std::endl << "New name: "; std::cin.ignore(); std::getline(std::cin, name);
                     pipeline.name = name;
                     std::cout << "Name has been changed! Return to edit menu!" << std::endl;
                     break;
@@ -316,7 +316,7 @@ public:
                 case 1: {
                     system("cls");
                     std::string name;
-                    std::cout << std::endl; std::cout << "New name: "; std::cin >> name;
+                    std::cout << std::endl << "New name: "; std::cin.ignore(); std::getline(std::cin, name);
                     compressorstation.name = name;
                     std::cout << "Name has been changed! Return to edit menu!" << std::endl;
                     break;
@@ -327,11 +327,10 @@ public:
                     std::cout << std::endl; std::cout << "New count: "; std::cin >> shops_in_work;
                     if (shops_in_work < compressorstation.getShopsCount()) {
                         compressorstation.shops_in_work = shops_in_work;
+                        std::cout << "Count of working shops has been changed! Return to edit menu!" << std::endl;
                     } else {
                         std::cout << "[Error] Count of working shops must be less then count of shops! Return to edit menu!" << std::endl;
-                        break;
                     }
-                    std::cout << "Count of working shops has been changed! Return to edit menu!" << std::endl;
                     break;
                 }
                 case 0: {
