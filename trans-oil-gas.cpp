@@ -178,9 +178,14 @@ public:
     }
 };
 
-class Menu {
-public:
-    void mainMenuInterface() {
+int main()
+{
+    Pipeline pipeline = Pipeline();
+    CompressorStation compressorstation = CompressorStation();
+    system("cls");
+
+    int choice;
+    do {
         std::cout << std::endl;
         std::cout << "-------------Main menu-------------" << std::endl;
         std::cout << "[1] Create new pipeline" << std::endl;
@@ -193,172 +198,76 @@ public:
         std::cout << "[0] Exit" << std::endl;
         std::cout << "-----------------------------------" << std::endl;
         std::cout << "Choose the option: ";
-    }
 
-    void mainMenu(Pipeline pipeline, CompressorStation compressorstation) {
-        int choice;
-        do {
-            mainMenuInterface();
-            std::cin >> choice;
+        std::cin >> choice;
 
-            switch(choice) {
-                case 1: {
-                    system("cls");
-                    pipeline.readFromConsole();
-                    std::cout << std::endl << "Successful creation! Return to main menu!" << std::endl;
-                    break;
-                }
-                case 2: {
-                    system("cls");
-                    compressorstation.readFromConsole();
-                    std::cout << std::endl << "Successful creation! Return to main menu!" << std::endl;
-                    break;
-                }
-                case 3: {
-                    system("cls");
-                    pipeline.getInfo();
-                    compressorstation.getInfo();
-                    std::cout << std::endl << "Return to main menu!" << std::endl;
-                    break;
-                }
-                case 4: {
-                    system("cls");
-                    if (pipeline.name == "Undefined") {
-                        std::cout << "There is nothing to change!" << std::endl;
-                        std::cout << "Pipeline has not been created yet or created with incorrect parameters!" << std::endl;
-                        std::cout << "Return to main menu!" << std::endl;
-                    } else {
-                        pipelineEditMenu(pipeline);
-                    }
-                    break;
-                }
-                case 5: {
-                    system("cls");
-                    if (compressorstation.name == "Undefined") {
-                        std::cout << "There is nothing to change!" << std::endl;
-                        std::cout << "Compressor station has not been created yet or created with incorrect parameters!" << std::endl;
-                        std::cout << "Return to main menu!" << std::endl;
-                    } else {
-                        compressorEditMenu(compressorstation);
-                    }
-                    break;
-                }
-                case 6: {
-                    system("cls");
-                    pipeline.saveToFile("save-load-file.txt");
-                    compressorstation.saveToFile("save-load-file.txt");
-                    std::cout << std::endl << "Return to main menu!" << std::endl;
-                    break;
-                }
-                case 7: {
-                    system("cls");
-                    pipeline.loadFromFile("save-load-file.txt");
-                    compressorstation.loadFromFile("save-load-file.txt");
-                    std::cout<< std::endl << "Return to main menu!" << std::endl;
-                    break;
-                }
-                case 0: {
-                    system("cls");
-                    break;
-                }
-                default:
-                    std::cout << std::endl << "Invalid! Try again!" << std::endl;
-            }   
-        } while (choice != 0);
-    }
-
-    void ipelpineEditMenuInterface() {
-        std::cout << std::endl;
-        std::cout << "---------Edit pipeline menu---------" << std::endl;
-        std::cout << "[1] Edit name" << std::endl;
-        std::cout << "[2] Edit status" << std::endl;
-        std::cout << "[0] Exit" << std::endl;
-        std::cout << "------------------------------------" << std::endl;
-        std::cout << "Choose the option: ";
-    }
-
-    void pipelineEditMenu(Pipeline& pipeline) {
-        int pipeline_choice;
-        do {
-            ipelpineEditMenuInterface();
-            std::cin >> pipeline_choice;
-            switch(pipeline_choice) {
-                case 1: {
-                    system("cls");
-                    std::string name;
-                    std::cout << std::endl << "New name: "; std::cin.ignore(); std::getline(std::cin, name);
-                    pipeline.name = name;
-                    std::cout << "Name has been changed! Return to edit menu!" << std::endl;
-                    break;
-                }
-                case 2: {
+        switch(choice) {
+            case 1:
+                system("cls");
+                pipeline.readFromConsole();
+                std::cout << std::endl << "Successful creation! Return to main menu!" << std::endl;
+                break;
+            case 2:
+                system("cls");
+                compressorstation.readFromConsole();
+                std::cout << std::endl << "Successful creation! Return to main menu!" << std::endl;
+                break;
+            case 3:
+                system("cls");
+                pipeline.getInfo();
+                compressorstation.getInfo();
+                std::cout << std::endl << "Return to main menu!" << std::endl;
+                break;
+            case 4:
+                system("cls");
+                if (pipeline.name == "Undefined") {
+                    std::cout << "There is nothing to change!" << std::endl;
+                    std::cout << "Pipeline has not been created yet or created with incorrect parameters!" << std::endl;
+                    std::cout << "Return to main menu!" << std::endl;
+                } else {
                     system("cls");
                     pipeline.status = !pipeline.status;
-                    std::cout << "Status has been changed! Return to edit menu!" << std::endl;
-                    break;
+                    std::cout << "Pipeline status has been changed! Return to edit menu!" << std::endl;
                 }
-                case 0: {
-                    system("cls");
-                    break;
-                }
-                default:
-                    std::cout << std::endl << "Invalid! Try again!" << std::endl;
-            }
-        } while (pipeline_choice != 0);
-
-    }
-
-    void compressorStationEditMenuInterface() {
-        std::cout << std::endl;
-        std::cout << "----Edit compressor station menu----" << std::endl;
-        std::cout << "[1] Edit name" << std::endl;
-        std::cout << "[2] Edit count of working shops" << std::endl;
-        std::cout << "[0] Exit" << std::endl;
-        std::cout << "------------------------------------" << std::endl;
-        std::cout << "Choose the option: ";
-    }
-
-    void compressorEditMenu(CompressorStation& compressorstation) {
-        int cs_choice;
-        do {
-            compressorStationEditMenuInterface();
-            std::cin >> cs_choice;
-            switch(cs_choice) {
-                case 1: {
-                    system("cls");
-                    std::string name;
-                    std::cout << std::endl << "New name: "; std::cin.ignore(); std::getline(std::cin, name);
-                    compressorstation.name = name;
-                    std::cout << "Name has been changed! Return to edit menu!" << std::endl;
-                    break;
-                }
-                case 2: {
+                break;
+            case 5:
+                system("cls");
+                if (compressorstation.name == "Undefined") {
+                    std::cout << "There is nothing to change!" << std::endl;
+                    std::cout << "Compressor station has not been created yet or created with incorrect parameters!" << std::endl;
+                    std::cout << "Return to main menu!" << std::endl;
+                } else {                        
                     system("cls");
                     int shops_in_work;
-                    std::cout << std::endl; std::cout << "New count: "; std::cin >> shops_in_work;
+                    std::cout << std::endl << "New count: "; std::cin >> shops_in_work;
                     if (shops_in_work < compressorstation.getShopsCount()) {
                         compressorstation.shops_in_work = shops_in_work;
-                        std::cout << "Count of working shops has been changed! Return to edit menu!" << std::endl;
+                        std::cout << "Count of working shops has been changed! Return to main menu!" << std::endl;
                     } else {
-                        std::cout << "[Error] Count of working shops must be less then count of shops! Return to edit menu!" << std::endl;
+                        std::cout << "[Error] Count of working shops must be less then count of shops! Return to main menu!" << std::endl;
                     }
-                    break;
                 }
-                case 0: {
-                    system("cls");
-                    break;
-                }
-                default:
-                    std::cout << std::endl << "Invalid! Try again!" << std::endl;
+                break;
+            case 6: {
+                system("cls");
+                pipeline.saveToFile("save-load-file.txt");
+                compressorstation.saveToFile("save-load-file.txt");
+                std::cout << std::endl << "Return to main menu!" << std::endl;
+                break;
             }
-        } while (cs_choice != 0);
-    }
-};
+            case 7:
+                system("cls");
+                pipeline.loadFromFile("save-load-file.txt");
+                compressorstation.loadFromFile("save-load-file.txt");
+                std::cout<< std::endl << "Return to main menu!" << std::endl;
+                break;
+            case 0:
+                system("cls");
+                break;
+            default:
+                std::cout << std::endl << "Invalid! Try again!" << std::endl;
+        }   
+    } while (choice != 0);
 
-int main()
-{
-    system("cls");
-    Menu menu;
-    menu.mainMenu(Pipeline(), CompressorStation());
     return 0;
 }
