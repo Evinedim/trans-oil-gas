@@ -67,21 +67,20 @@ public:
 
     }
 
-    void saveToFile(std::string filename) {
-        std::ofstream file(filename);
-        if (file.is_open()) {
-            file << name << std::endl; 
-            file << length << std::endl;
-            file << diameter << std::endl;
-            file << status << std::endl;
-        }
-        file.close();
+    void saveToFile(std::ofstream& file) {
+        file << name << std::endl; 
+        file << length << std::endl;
+        file << diameter << std::endl;
+        file << status << std::endl;
         std::cout << "Pipeline was successfully saved!" << std::endl;
     }
 
-    void loadFromFile(std::string filename) {
-        std::ifstream file("save-load-file.txt");
-        
+    void loadFromFile(std::ifstream& file) {
+        std::getline(file, name);
+        file >> length;
+        file >> diameter;
+        file >> status;
+        file.ignore();
         std::cout << "Pipeline was successfully loaded!" << std::endl;
     }
 
@@ -153,21 +152,20 @@ public:
         }
     }
 
-    void saveToFile(std::string filename) {
-        std::ofstream file(filename, std::ios::app);
-        if (file.is_open()) {
-            file << name << std::endl;
-            file << shops_count << std::endl;
-            file << shops_in_work << std::endl;
-            file << station_class << std::endl;
-        }
-        file.close();
+    void saveToFile(std::ofstream& file) {
+        file << name << std::endl;
+        file << shops_count << std::endl;
+        file << shops_in_work << std::endl;
+        file << station_class << std::endl;
         std::cout << "Compressor station was successfully saved!" << std::endl;
     }
 
-    void loadFromFile(std::string filename) {
-        std::ifstream file(filename);
-        
+    void loadFromFile(std::ifstream& file) {
+        std::getline(file, name);
+        file >> shops_count;
+        file >> shops_in_work;
+        file >> station_class;
+        file.ignore();
         std::cout << "Compressor station was successfully loaded!" << std::endl;
     }
 
@@ -240,17 +238,26 @@ int main()
                 break;
             case 6: {
                 system("cls");
-                pipeline.saveToFile("save-load-file.txt");
-                compressorstation.saveToFile("save-load-file.txt");
+                std::ofstream file("save-load-file.txt");
+                if (file.is_open()) {
+                    pipeline.saveToFile(file);
+                    compressorstation.saveToFile(file);
+                }
+                file.close();
                 std::cout << std::endl << "Return to main menu!" << std::endl;
                 break;
             }
-            case 7:
+            case 7: {
                 system("cls");
-                pipeline.loadFromFile("save-load-file.txt");
-                compressorstation.loadFromFile("save-load-file.txt");
+                std::ifstream file("save-load-file.txt");
+                if (file.is_open()) {
+                    pipeline.loadFromFile(file);
+                    compressorstation.loadFromFile(file);
+                }
+                file.close();
                 std::cout<< std::endl << "Return to main menu!" << std::endl;
                 break;
+            }
             case 0:
                 system("cls");
                 break;
