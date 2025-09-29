@@ -4,12 +4,12 @@
 #include <vector>
 #include <limits>
 
-template<typename T> bool is_valid(T& value) {
+template<typename T> bool validation(T& value) {
     if (std::cin >> value) {
         return true;
     }
     std::cin.clear();
-    std::cin.ignore();
+    std::cin.ignore(1000, '\n');
     return false;
 }
 
@@ -36,6 +36,29 @@ public:
             }
             std::cout << "-----------------------------------" << std::endl;
         }
+    }
+
+    void readFromConsole() {
+        std::cout << std::endl << "Name: "; 
+        std::cin.ignore(); 
+        std::getline(std::cin, name);
+
+        while (true) {
+            std::cout << "Length ('km'): ";
+            if (validation(length) && length >= 0) {
+                break;
+            }
+            std::cout << std::endl << "[Error] Length must be double and more than zero! Try again!" << std::endl;
+        }
+
+        while (true) {
+            std::cout << "Diameter ('mm'): ";
+            if (validation(diameter) && diameter >= 0) {
+                break;
+            }
+            std::cout << std::endl << "[Error] Diameter must be integer and more than zero! Try again!" << std::endl;
+        }
+
     }
 
     void saveToFile(std::string filename) {
@@ -151,23 +174,9 @@ public:
             switch(choice) {
                 case 1: {
                     system("cls");
-                    std::string name; double length; int diameter;
 
-                    std::cout << std::endl << "Name: "; std::cin.ignore(); std::getline(std::cin, name);
+                    pipeline.readFromConsole();
 
-                    std::cout << "Length ('km'): ";
-                    if (!is_valid(length) || length < 0) {
-                        std::cout << std::endl << "[Error] Length must be double and more than zero! Return to main menu!" << std::endl;
-                        break;
-                    }
-
-                    std::cout << "Diameter ('mm'): ";
-                    if (!is_valid(diameter) || diameter < 0) {
-                        std::cout << std::endl << "[Error] Diameter must be integer and more than zero! Return to main menu!" << std::endl;
-                        break;
-                    }
-
-                    pipeline = Pipeline(name, length, diameter);
                     std::cout << std::endl << "Successful creation! Return to main menu!" << std::endl;
                     break;
                 }
@@ -178,13 +187,13 @@ public:
                     std::cout << std::endl << "Name: "; std::cin.ignore(); std::getline(std::cin, name);
                     
                     std::cout << "Count of shops: ";
-                    if (!is_valid(shops_count) || shops_count < 0) {
+                    if (!validation(shops_count) || shops_count < 0) {
                         std::cout << std::endl << "[Error] Count of shops must be integer and more than zero! Return to main menu!" << std::endl;
                         break;
                     }
 
                     std::cout << "Count of working shops: ";
-                    if (!is_valid(shops_in_work) || shops_in_work < 0) {
+                    if (!validation(shops_in_work) || shops_in_work < 0) {
                         std::cout << std::endl << "[Error] Count of working shops must be integer and more than zero! Return to main menu!" << std::endl;
                         break;
                     }
@@ -194,7 +203,7 @@ public:
                     }
                     
                     std::cout << "Class of compressor station [1-10]: ";
-                    if (!is_valid(station_class) || station_class < 1 || station_class > 10) {
+                    if (!validation(station_class) || station_class < 1 || station_class > 10) {
                         std::cout << std::endl << "[Error] Class of compressor station must be integer in range [1-10]! Return to main menu!" << std::endl;
                         break;
                     }
