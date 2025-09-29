@@ -21,10 +21,9 @@ public:
     std::string getName() { return name; }
 
     void changeStatus() {
-        std::cout << "Current pipeline:" << std::endl;
         getInfo();
         status = !status;
-        std::cout << "Pipeline status has been changed! Return to edit menu!" << std::endl;
+        std::cout << "Pipeline status has been changed!" << std::endl;
     }
 
     void getInfo() {
@@ -77,9 +76,7 @@ public:
 
     void loadFromFile(std::ifstream& file) {
         std::getline(file, name);
-        file >> length;
-        file >> diameter;
-        file >> status;
+        file >> length >> diameter >> status;
         file.ignore();
         std::cout << "Pipeline was successfully loaded!" << std::endl;
     }
@@ -162,9 +159,7 @@ public:
 
     void loadFromFile(std::ifstream& file) {
         std::getline(file, name);
-        file >> shops_count;
-        file >> shops_in_work;
-        file >> station_class;
+        file >> shops_count >> shops_in_work >> station_class;
         file.ignore();
         std::cout << "Compressor station was successfully loaded!" << std::endl;
     }
@@ -223,6 +218,7 @@ int main()
                 } else {
                     system("cls");
                     pipeline.changeStatus();
+                    std::cout << std::endl << "Return to main menu!" << std::endl;
                 }
                 break;
             case 5:
@@ -234,6 +230,7 @@ int main()
                 } else {                        
                     system("cls");
                     compressorstation.changeCountOfWorkingShops();
+                    std::cout << std::endl << "Return to main menu!" << std::endl;
                 }
                 break;
             case 6: {
