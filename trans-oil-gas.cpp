@@ -116,6 +116,36 @@ public:
         }
     }
 
+    void readFromConsole() {
+        std::cout << std::endl << "Name: "; 
+        std::cin.ignore(); 
+        std::getline(std::cin, name);
+
+        while (true) {
+            std::cout << "Count of shops: ";
+            if (validation(shops_count) && shops_count >= 0) {
+                break;
+            }
+            std::cout << std::endl << "[Error] Count of shops must be integer and more than zero! Try again!" << std::endl;
+        }
+
+        while (true) {
+            std::cout << "Count of working shops: ";
+            if (validation(shops_in_work) && (shops_in_work >= 0 && shops_in_work <= shops_count)) {
+                break;
+            }
+            std::cout << std::endl << "[Error] Count of working shops must be integer and less then count of shops! Try again!" << std::endl;
+        }
+
+        while (true) {
+            std::cout << "Class of compressor station [1-10]: ";
+            if (validation(station_class) && (station_class >= 1 && station_class <= 10)) {
+                break;
+            }
+            std::cout << std::endl << "[Error] Class of compressor station must be integer in range [1-10]! Return to main menu!" << std::endl;
+        }
+    }
+
     void saveToFile(std::string filename) {
         std::ofstream file(filename, std::ios::app);
         if (file.is_open()) {
@@ -174,41 +204,13 @@ public:
             switch(choice) {
                 case 1: {
                     system("cls");
-
                     pipeline.readFromConsole();
-
                     std::cout << std::endl << "Successful creation! Return to main menu!" << std::endl;
                     break;
                 }
                 case 2: {
                     system("cls");
-                    std::string name; int shops_count, shops_in_work, station_class;
-
-                    std::cout << std::endl << "Name: "; std::cin.ignore(); std::getline(std::cin, name);
-                    
-                    std::cout << "Count of shops: ";
-                    if (!validation(shops_count) || shops_count < 0) {
-                        std::cout << std::endl << "[Error] Count of shops must be integer and more than zero! Return to main menu!" << std::endl;
-                        break;
-                    }
-
-                    std::cout << "Count of working shops: ";
-                    if (!validation(shops_in_work) || shops_in_work < 0) {
-                        std::cout << std::endl << "[Error] Count of working shops must be integer and more than zero! Return to main menu!" << std::endl;
-                        break;
-                    }
-                    if (shops_count < shops_in_work) {
-                        std::cout << std::endl << "[Error] Count of working shops must be less then count of shops! Return to main menu!" << std::endl;
-                        break;
-                    }
-                    
-                    std::cout << "Class of compressor station [1-10]: ";
-                    if (!validation(station_class) || station_class < 1 || station_class > 10) {
-                        std::cout << std::endl << "[Error] Class of compressor station must be integer in range [1-10]! Return to main menu!" << std::endl;
-                        break;
-                    }
-
-                    compressorstation = CompressorStation(name, shops_count, shops_in_work, station_class);
+                    compressorstation.readFromConsole();
                     std::cout << std::endl << "Successful creation! Return to main menu!" << std::endl;
                     break;
                 }
