@@ -1,8 +1,6 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-#include <vector>
-#include <limits>
 
 template<typename T> bool validation(T& value) {
     if (std::cin >> value) {
@@ -23,6 +21,7 @@ public:
     std::string getName() { return name; }
 
     void changeStatus() {
+        std::cout << "Current pipeline:" << std::endl;
         getInfo();
         status = !status;
         std::cout << "Pipeline status has been changed! Return to edit menu!" << std::endl;
@@ -71,7 +70,10 @@ public:
     void saveToFile(std::string filename) {
         std::ofstream file(filename);
         if (file.is_open()) {
-            file << "P," << name << "," << length << "," << diameter << "," << status << std::endl;
+            file << name << std::endl; 
+            file << length << std::endl;
+            file << diameter << std::endl;
+            file << status << std::endl;
         }
         file.close();
         std::cout << "Pipeline was successfully saved!" << std::endl;
@@ -79,24 +81,12 @@ public:
 
     void loadFromFile(std::string filename) {
         std::ifstream file("save-load-file.txt");
-        std::vector<std::string> lines;
-        std::string line;
-        int current_line = 1;
-        if (file.is_open()) {
-            while (std::getline(file, line, ',')) {
-                if (current_line >= 2 && current_line <= 4) {
-                    lines.push_back(line);
-                }
-                current_line++;
-            }
-        }
-        name = lines[0]; length = std::stod(lines[1]); diameter = std::stoi(lines[2]);
-        file.close();
+        
         std::cout << "Pipeline was successfully loaded!" << std::endl;
     }
 
-    Pipeline(std::string p_name = "Undefined", double p_length = 0.0, int p_diameter = 0, bool p_status = false) {
-        name = p_name; length = p_length; diameter = p_diameter; status = p_status;
+    Pipeline() {
+        name = "Undefined"; length = 0.0; diameter = 0; status = false;
     }
 };
 
@@ -166,7 +156,10 @@ public:
     void saveToFile(std::string filename) {
         std::ofstream file(filename, std::ios::app);
         if (file.is_open()) {
-            file << "CS," << name << "," << shops_count << "," << shops_in_work << "," << station_class << std::endl;
+            file << name << std::endl;
+            file << shops_count << std::endl;
+            file << shops_in_work << std::endl;
+            file << station_class << std::endl;
         }
         file.close();
         std::cout << "Compressor station was successfully saved!" << std::endl;
@@ -174,24 +167,12 @@ public:
 
     void loadFromFile(std::string filename) {
         std::ifstream file(filename);
-        std::vector<std::string> lines;
-        std::string line;
-        int current_line = 1;
-        if (file.is_open()) {
-            while (std::getline(file, line, ',')) {
-                if (current_line >= 6 && current_line <= 9) {
-                    lines.push_back(line);
-                }
-                current_line++;
-            }
-        }
-        name = lines[0]; shops_count = std::stoi(lines[1]); shops_in_work = std::stoi(lines[2]); station_class = std::stoi(lines[3]);
-        file.close();
+        
         std::cout << "Compressor station was successfully loaded!" << std::endl;
     }
 
-    CompressorStation(std::string p_name = "Undefined", int p_shops_count = 0, int p_shops_in_work = 0, int p_station_class = 0) {
-        name = p_name; shops_count = p_shops_count; shops_in_work = p_shops_in_work; station_class = p_station_class;
+    CompressorStation() {
+        name = "Undefined"; shops_count = 0; shops_in_work = 0; station_class = 0;
     }
 };
 
