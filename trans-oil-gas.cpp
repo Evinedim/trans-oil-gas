@@ -14,12 +14,19 @@ template<typename T> bool validation(T& value) {
 }
 
 class Pipeline {
+    std::string name;
     double length;
     int diameter;
+    bool status;
 
 public:    
-    std::string name;
-    bool status;
+    std::string getName() { return name; }
+
+    void changeStatus() {
+        getInfo();
+        status = !status;
+        std::cout << "Pipeline status has been changed! Return to edit menu!" << std::endl;
+    }
 
     void getInfo() {
         if (name == "Undefined" || length == 0.0 || diameter == 0) {
@@ -94,14 +101,24 @@ public:
 };
 
 class CompressorStation {
+    std::string name;
     int shops_count;
     int station_class;
-
-public:
-    std::string name;
     int shops_in_work;
 
-    int getShopsCount() { return shops_count; }
+public:
+    std::string getName() { return name; }
+
+    void changeCountOfWorkingShops() {
+        getInfo();
+        while (true) {
+            std::cout << "New count of working shops: ";
+            if (validation(shops_in_work) && (shops_in_work >= 0 && shops_in_work <= shops_count)) {
+                break;
+            }
+            std::cout << std::endl << "[Error] Count of working shops must be integer and less then count of shops! Try again!" << std::endl;
+        }
+    }
 
     void getInfo() {
         if (name == "Undefined" || shops_count == 0 || shops_in_work == 0 || station_class == 0) {
@@ -220,32 +237,24 @@ int main()
                 break;
             case 4:
                 system("cls");
-                if (pipeline.name == "Undefined") {
+                if (pipeline.getName() == "Undefined") {
                     std::cout << "There is nothing to change!" << std::endl;
                     std::cout << "Pipeline has not been created yet or created with incorrect parameters!" << std::endl;
                     std::cout << "Return to main menu!" << std::endl;
                 } else {
                     system("cls");
-                    pipeline.status = !pipeline.status;
-                    std::cout << "Pipeline status has been changed! Return to edit menu!" << std::endl;
+                    pipeline.changeStatus();
                 }
                 break;
             case 5:
                 system("cls");
-                if (compressorstation.name == "Undefined") {
+                if (compressorstation.getName() == "Undefined") {
                     std::cout << "There is nothing to change!" << std::endl;
                     std::cout << "Compressor station has not been created yet or created with incorrect parameters!" << std::endl;
                     std::cout << "Return to main menu!" << std::endl;
                 } else {                        
                     system("cls");
-                    int shops_in_work;
-                    std::cout << std::endl << "New count: "; std::cin >> shops_in_work;
-                    if (shops_in_work < compressorstation.getShopsCount()) {
-                        compressorstation.shops_in_work = shops_in_work;
-                        std::cout << "Count of working shops has been changed! Return to main menu!" << std::endl;
-                    } else {
-                        std::cout << "[Error] Count of working shops must be less then count of shops! Return to main menu!" << std::endl;
-                    }
+                    compressorstation.changeCountOfWorkingShops();
                 }
                 break;
             case 6: {
