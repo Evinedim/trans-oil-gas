@@ -2,13 +2,14 @@
 #include <string>
 #include <fstream>
 
-template<typename T> bool validation(T& value) {
+template<typename T> 
+bool validation(T& value) {
     if (std::cin >> value) {
-        return true;
+        return 1;
     }
     std::cin.clear();
     std::cin.ignore(1000, '\n');
-    return false;
+    return 0;
 }
 
 class Pipeline {
@@ -86,17 +87,20 @@ public:
 
     void saveToFile(std::ofstream& file) {
         file << name << std::endl; 
-        file << length << std::endl;
-        file << diameter << std::endl;
-        file << status << std::endl;
+        file << length << " " << diameter << " " << status;
         std::cout << "Pipeline was successfully saved!" << std::endl;
     }
 
     void loadFromFile(std::ifstream& file) {
         std::getline(file, name);
-        file >> length >> diameter >> status;
-        file.ignore();
-        std::cout << "Pipeline was successfully loaded!" << std::endl;
+        if (file >> length >> diameter >> status) {
+            std::cout << "Pipeline was successfully loaded!" << std::endl;
+        } else {
+            file.clear();
+            *this = Pipeline();
+            std::cout << "[Error] Pipeline was not loaded!" << std::endl;
+        }
+        file.ignore(1000, '\n');
     }
 
     Pipeline() {
@@ -170,17 +174,20 @@ public:
 
     void saveToFile(std::ofstream& file) {
         file << name << std::endl;
-        file << shops_count << std::endl;
-        file << shops_in_work << std::endl;
-        file << station_class << std::endl;
+        file << shops_count << " " << shops_in_work << " " << station_class;
         std::cout << "Compressor station was successfully saved!" << std::endl;
     }
 
     void loadFromFile(std::ifstream& file) {
         std::getline(file, name);
-        file >> shops_count >> shops_in_work >> station_class;
-        file.ignore();
-        std::cout << "Compressor station was successfully loaded!" << std::endl;
+        if (file >> shops_count >> shops_in_work >> station_class) {
+            std::cout << "Compressor station was successfully loaded!" << std::endl;
+        } else {
+            file.clear();
+            *this = CompressorStation();
+            std::cout << "[Error] Compressor station was not loaded!" << std::endl;
+        }
+        file.ignore(1000, '\n');
     }
 
     CompressorStation() {
