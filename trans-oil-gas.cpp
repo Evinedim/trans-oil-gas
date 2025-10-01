@@ -18,17 +18,10 @@ class Pipeline {
     bool status;
 
 public:    
-    std::string getName() { return name; }
-
-    void changeStatus() {
-        getInfo();
-        status = !status;
-        std::cout << "Pipeline status has been changed!" << std::endl;
-    }
-
-    void getInfo() {
+    bool getInfo() {
         if (name == "Undefined" || length == 0.0 || diameter == 0) {
             std::cout << "Pipeline has not been created yet or created with incorrect parameters!" << std::endl;
+            return 0;
         } else {
             std::cout << std::endl << "-------------Pipeline--------------" << std::endl;
             std::cout << "Name: " << name << std::endl;
@@ -40,6 +33,7 @@ public:
                 std::cout << "Status: on repair" << std::endl;
             }
             std::cout << "-----------------------------------" << std::endl;
+            return 1;
         }
     }
 
@@ -64,6 +58,31 @@ public:
             std::cout << std::endl << "[Error] Diameter must be integer and more than zero! Try again!" << std::endl;
         }
 
+    }
+
+    void changeStatus() {
+        if (getInfo()) {
+            std::cout << std::endl << "Change the current status?" << std::endl;
+            std::cout << "[1] Yes" << std::endl;
+            std::cout << "[0] No" << std::endl;
+
+            int choice;
+            while (choice != 0) {
+                std::cout << "Your choice: "; std::cin >> choice;
+
+                switch (choice) {
+                    case 1:
+                        status = !status;
+                        std::cout << std::endl << "Pipeline status has been changed!" << std::endl;
+                        break;
+                    case 0:
+                        system("cls");
+                        break;
+                    default:
+                        std::cout << std::endl << "Invalid! Try again!" << std::endl;
+                }
+            }
+        }
     }
 
     void saveToFile(std::ofstream& file) {
@@ -211,15 +230,8 @@ int main()
                 break;
             case 4:
                 system("cls");
-                if (pipeline.getName() == "Undefined") {
-                    std::cout << "There is nothing to change!" << std::endl;
-                    std::cout << "Pipeline has not been created yet or created with incorrect parameters!" << std::endl;
-                    std::cout << "Return to main menu!" << std::endl;
-                } else {
-                    system("cls");
-                    pipeline.changeStatus();
-                    std::cout << std::endl << "Return to main menu!" << std::endl;
-                }
+                pipeline.changeStatus();
+                std::cout << std::endl << "Return to main menu!" << std::endl;
                 break;
             case 5:
                 system("cls");
