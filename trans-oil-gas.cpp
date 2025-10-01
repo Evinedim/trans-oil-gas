@@ -76,10 +76,9 @@ public:
                         std::cout << std::endl << "Pipeline status has been changed!" << std::endl;
                         break;
                     case 0:
-                        system("cls");
                         break;
                     default:
-                        std::cout << std::endl << "Invalid! Try again!" << std::endl;
+                        std::cout << std::endl << "[Error] Invalid choice! Try again!" << std::endl;
                 }
             }
         }
@@ -112,22 +111,10 @@ class CompressorStation {
     int shops_in_work;
 
 public:
-    std::string getName() { return name; }
-
-    void changeCountOfWorkingShops() {
-        getInfo();
-        while (true) {
-            std::cout << "New count of working shops: ";
-            if (validation(shops_in_work) && (shops_in_work >= 0 && shops_in_work <= shops_count)) {
-                break;
-            }
-            std::cout << std::endl << "[Error] Count of working shops must be integer and less then count of shops! Try again!" << std::endl;
-        }
-    }
-
-    void getInfo() {
+    bool getInfo() {
         if (name == "Undefined" || shops_count == 0 || shops_in_work == 0 || station_class == 0) {
             std::cout << "Compressor station has not been created yet or created with incorrect parameters!" << std::endl;
+            return 0;
         } else {
             std::cout << std::endl << "--------Compressor station---------" << std::endl;
             std::cout << "Name: " << name << std::endl;
@@ -135,6 +122,7 @@ public:
             std::cout << "Shops in work: " << shops_in_work << std::endl;
             std::cout << "Station class: " << station_class << std::endl;
             std::cout << "-----------------------------------" << std::endl;
+            return 1;
         }
     }
 
@@ -165,6 +153,18 @@ public:
                 break;
             }
             std::cout << std::endl << "[Error] Class of compressor station must be integer in range [1-10]! Return to main menu!" << std::endl;
+        }
+    }
+
+    void changeCountOfWorkingShops() {
+        if (getInfo()) {
+            while (true) {
+                std::cout << std::endl << "New count of working shops: ";
+                if (validation(shops_in_work) && (shops_in_work >= 0 && shops_in_work <= shops_count)) {
+                    break;
+                }
+                std::cout << std::endl << "[Error] Count of working shops must be integer and less then count of shops! Try again!" << std::endl;
+            }
         }
     }
 
@@ -235,15 +235,8 @@ int main()
                 break;
             case 5:
                 system("cls");
-                if (compressorstation.getName() == "Undefined") {
-                    std::cout << "There is nothing to change!" << std::endl;
-                    std::cout << "Compressor station has not been created yet or created with incorrect parameters!" << std::endl;
-                    std::cout << "Return to main menu!" << std::endl;
-                } else {                        
-                    system("cls");
-                    compressorstation.changeCountOfWorkingShops();
-                    std::cout << std::endl << "Return to main menu!" << std::endl;
-                }
+                compressorstation.changeCountOfWorkingShops();
+                std::cout << std::endl << "Return to main menu!" << std::endl;
                 break;
             case 6: {
                 system("cls");
@@ -271,7 +264,7 @@ int main()
                 system("cls");
                 break;
             default:
-                std::cout << std::endl << "Invalid! Try again!" << std::endl;
+                std::cout << std::endl << "[Error] Invalid choice! Try again!" << std::endl;
         }   
     } while (choice != 0);
 
