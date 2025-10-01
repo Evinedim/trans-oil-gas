@@ -75,6 +75,7 @@ public:
                     case 1:
                         status = !status;
                         std::cout << std::endl << "Pipeline status has been changed!" << std::endl;
+                        choice = 0;
                         break;
                     case 0:
                         break;
@@ -86,9 +87,13 @@ public:
     }
 
     void saveToFile(std::ofstream& file) {
-        file << name << std::endl; 
-        file << length << " " << diameter << " " << status;
-        std::cout << "Pipeline was successfully saved!" << std::endl;
+        if (name == "Undefined" || length == 0.0 || diameter == 0) {
+            std::cout << "[Pipeline] There is nothing to save!" << std::endl;
+        } else {
+            file << name << std::endl; 
+            file << length << " " << diameter << " " << status << std::endl;
+            std::cout << "Pipeline was successfully saved!" << std::endl;
+        }
     }
 
     void loadFromFile(std::ifstream& file) {
@@ -173,9 +178,13 @@ public:
     }
 
     void saveToFile(std::ofstream& file) {
-        file << name << std::endl;
-        file << shops_count << " " << shops_in_work << " " << station_class;
-        std::cout << "Compressor station was successfully saved!" << std::endl;
+        if (name == "Undefined" || shops_count == 0 || shops_in_work == 0 || station_class == 0) {
+            std::cout << "[Compressor Station] There is nothing to save!" << std::endl;
+        } else {
+            file << name << std::endl;
+            file << shops_count << " " << shops_in_work << " " << station_class << std::endl;
+            std::cout << "Compressor station was successfully saved!" << std::endl;
+        }
     }
 
     void loadFromFile(std::ifstream& file) {
