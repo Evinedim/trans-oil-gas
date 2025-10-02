@@ -4,7 +4,7 @@
 
 template<typename T> 
 bool validation(T& value) {
-    if (std::cin >> value) {
+    if (std::cin >> value && std::cin.peek() == '\n') {
         return 1;
     }
     std::cin.clear();
