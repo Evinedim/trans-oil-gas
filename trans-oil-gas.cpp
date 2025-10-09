@@ -3,7 +3,7 @@
 #include <fstream>
 
 template<typename T> 
-bool validation(std::istream& stream, T& value) {
+bool validation(T& value) {
     if (std::cin >> value && std::cin.peek() == '\n') {
         return 1;
     }
@@ -42,7 +42,7 @@ public:
 
         while (true) {
             std::cout << "Length ('km'): ";
-            if (validation(std::cin, length) && length >= 0) {
+            if (validation(length) && length >= 0) {
                 break;
             }
             std::cout << std::endl << "[Error] Length must be double and more than zero! Try again!" << std::endl;
@@ -50,7 +50,7 @@ public:
 
         while (true) {
             std::cout << "Diameter ('mm'): ";
-            if (validation(std::cin, diameter) && diameter >= 0) {
+            if (validation(diameter) && diameter >= 0) {
                 break;
             }
             std::cout << std::endl << "[Error] Diameter must be integer and more than zero! Try again!" << std::endl;
@@ -61,13 +61,19 @@ public:
     void changeStatus() {
         getInfo();
         if (name != "Undefined" || length != 0.0 || diameter != 0) {
-            std::cout << std::endl << "Change the current status?" << std::endl;
-            std::cout << "[1] Yes" << std::endl;
-            std::cout << "[0] No" << std::endl;
-
             int choice;
-            while (choice != 0) {
-                std::cout << "Your choice: "; std::cin >> choice;
+            do {
+                std::cout << std::endl << "Change the current status?" << std::endl;
+                std::cout << "[1] Yes" << std::endl;
+                std::cout << "[0] No" << std::endl;
+
+                while (true) {
+                    std::cout << "Your choice: ";
+                    if (validation(choice) && choice >= 1 && choice <= 2) {
+                        break;
+                    }
+                    std::cout << std::endl << "[Error] Invalid choice! Try again!" << std::endl;
+                }
 
                 switch (choice) {
                     case 1:
@@ -77,10 +83,8 @@ public:
                         break;
                     case 0:
                         break;
-                    default:
-                        std::cout << std::endl << "[Error] Invalid choice! Try again!" << std::endl;
                 }
-            }
+            } while (choice != 0);
         }
     }
 
@@ -137,7 +141,7 @@ public:
 
         while (true) {
             std::cout << "Count of shops: ";
-            if (validation(std::cin, shops_count) && shops_count >= 0) {
+            if (validation(shops_count) && shops_count >= 0) {
                 break;
             }
             std::cout << std::endl << "[Error] Count of shops must be integer and more than zero! Try again!" << std::endl;
@@ -145,7 +149,7 @@ public:
 
         while (true) {
             std::cout << "Count of working shops: ";
-            if (validation(std::cin, shops_in_work) && (shops_in_work >= 0 && shops_in_work <= shops_count)) {
+            if (validation(shops_in_work) && (shops_in_work >= 0 && shops_in_work <= shops_count)) {
                 break;
             }
             std::cout << std::endl << "[Error] Count of working shops must be integer and less then count of shops! Try again!" << std::endl;
@@ -153,7 +157,7 @@ public:
 
         while (true) {
             std::cout << "Class of compressor station [1-10]: ";
-            if (validation(std::cin, station_class) && (station_class >= 1 && station_class <= 10)) {
+            if (validation(station_class) && (station_class >= 1 && station_class <= 10)) {
                 break;
             }
             std::cout << std::endl << "[Error] Class of compressor station must be integer in range [1-10]! Return to main menu!" << std::endl;
@@ -165,7 +169,7 @@ public:
         if (name != "Undefined" || shops_count != 0 || shops_in_work != 0 || station_class != 0) {
             while (true) {
                 std::cout << std::endl << "New count of working shops: ";
-                if (validation(std::cin, shops_in_work) && (shops_in_work >= 0 && shops_in_work <= shops_count)) {
+                if (validation(shops_in_work) && (shops_in_work >= 0 && shops_in_work <= shops_count)) {
                     break;
                 }
                 std::cout << std::endl << "[Error] Count of working shops must be integer and less then count of shops! Try again!" << std::endl;
@@ -221,7 +225,7 @@ int main() {
 
         while (true) {
             std::cout << "Choose the option: ";
-            if (validation(std::cin, choice)) {
+            if (validation(choice) && choice >= 0 && choice <= 7) {
                 break;
             }
             std::cout << std::endl << "[Error] Invalid choice! Try again!" << std::endl;
