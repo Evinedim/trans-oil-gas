@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <unordered_map>
+#include <map>
 
 template<typename T> 
 bool validation(T& value) {
@@ -10,6 +12,15 @@ bool validation(T& value) {
     std::cin.clear();
     std::cin.ignore(1000, '\n');
     return 0;
+}
+
+template<typename T>
+int generateID(std::unordered_map<int, T> &objects) {
+    int id = 0;
+    while (objects.count(id)) {
+        id++;
+    }
+    return id;
 }
 
 class Pipeline {
@@ -205,8 +216,8 @@ public:
 };
 
 int main() {
-    Pipeline pipeline = Pipeline();
-    CompressorStation compressorstation = CompressorStation();
+    std::unordered_map<int, Pipeline> pipelines = {};
+    std::unordered_map<int, CompressorStation> stations = {};
     system("cls");
 
     int choice;
@@ -232,55 +243,74 @@ int main() {
         }
 
         switch(choice) {
-            case 1:
+            case 1: {
+                Pipeline pipeline = Pipeline();
                 pipeline.readFromConsole();
                 std::cout << std::endl << "Successful creation! Return to main menu!" << std::endl;
+                pipelines[generateID(pipelines)] = pipeline;
                 break;
-            case 2:
-                compressorstation.readFromConsole();
+            }
+            case 2: {
+                CompressorStation station = CompressorStation();
+                station.readFromConsole();
                 std::cout << std::endl << "Successful creation! Return to main menu!" << std::endl;
+                stations[generateID(stations)] = station;
                 break;
-            case 3:
-                pipeline.getInfo();
-                compressorstation.getInfo();
-                std::cout << std::endl << "Return to main menu!" << std::endl;
-                break;
-            case 4:
-                pipeline.changeStatus();
-                std::cout << std::endl << "Return to main menu!" << std::endl;
-                break;
-            case 5:
-                compressorstation.changeCountOfWorkingShops();
-                std::cout << std::endl << "Return to main menu!" << std::endl;
-                break;
-            case 6: {
-                std::ofstream file("save-load-file.txt");
-                if (!file.is_open()) {
-                    std::cout << "[Error] File was not opened!" << std::endl;
+            }
+            case 3: {
+                std::map<int, Pipeline> sorted_pipelines(
+                    pipelines.begin(), pipelines.end()
+                );
+                for (auto& [id, pipeline] : sorted_pipelines) {
+                    std::cout << std::endl << id;
+                    pipeline.getInfo();
                 }
-
-                pipeline.saveToFile(file);
-                compressorstation.saveToFile(file);
-                
+                std::map<int, CompressorStation> sorted_stations(
+                    stations.begin(), stations.end()
+                );
+                for (auto& [id, compressor_station] : sorted_stations) {
+                    std::cout << std::endl << id;
+                    compressor_station.getInfo();
+                }
                 std::cout << std::endl << "Return to main menu!" << std::endl;
                 break;
             }
-            case 7: {
-                std::ifstream file("save-load-file.txt");
-                if (!file.is_open()) {
-                    std::cout << std::endl << "[Error] File was not opened!" << std::endl;
-                }
+            case 4:
+                // pipeline.changeStatus();
+                // std::cout << std::endl << "Return to main menu!" << std::endl;
+                break;
+            case 5:
+                // compressorstation.changeCountOfWorkingShops();
+                // std::cout << std::endl << "Return to main menu!" << std::endl;
+                break;
+            case 6: {
+                // std::ofstream file("save-load-file.txt");
+                // if (!file.is_open()) {
+                //     std::cout << "[Error] File was not opened!" << std::endl;
+                // }
+
+                // pipeline.saveToFile(file);
+                // compressorstation.saveToFile(file);
                 
-                std::string line;
-                while (file >> line) {
-                    if (line == "Pipeline") {
-                        pipeline.loadFromFile(file);
-                    }
-                    if (line == "Station") {
-                        compressorstation.loadFromFile(file);
-                    }
-                }
-                std::cout<< std::endl << "Return to main menu!" << std::endl;
+                // std::cout << std::endl << "Return to main menu!" << std::endl;
+                break;
+            }
+            case 7: {
+                // std::ifstream file("save-load-file.txt");
+                // if (!file.is_open()) {
+                //     std::cout << std::endl << "[Error] File was not opened!" << std::endl;
+                // }
+                
+                // std::string line;
+                // while (file >> line) {
+                //     if (line == "Pipeline") {
+                //         pipeline.loadFromFile(file);
+                //     }
+                //     if (line == "Station") {
+                //         compressorstation.loadFromFile(file);
+                //     }
+                // }
+                // std::cout<< std::endl << "Return to main menu!" << std::endl;
                 break;
             }
             case 0:
