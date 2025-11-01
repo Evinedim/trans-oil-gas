@@ -1,234 +1,22 @@
-#include <iostream>
-#include <string>
-#include <fstream>
-#include <unordered_map>
+#include "Pipe.h"
+#include "Station.h"
+#include "utils.h"
 #include <map>
 
-template<typename T> 
-bool validation(T& value) {
-    if (std::cin >> value && std::cin.peek() == '\n') {
-        return 1;
-    }
-    std::cin.clear();
-    std::cin.ignore(1000, '\n');
-    return 0;
-}
-
-template<typename T>
-int generateID(std::unordered_map<int, T> &objects) {
-    int id = 0;
-    while (objects.count(id)) {
-        id++;
-    }
-    return id;
-}
-
-class Pipeline {
-    std::string name;
-    double length;
-    int diameter;
-    bool status;
-
-public:    
-    void getInfo() {
-        if (name == "Undefined" || length == 0.0 || diameter == 0) {
-            std::cout << std::endl << "Pipeline has not been created yet or created with incorrect parameters!" << std::endl;
-        } else {
-            std::cout << std::endl << "-------------Pipeline--------------" << std::endl;
-            std::cout << "Name: " << name << std::endl;
-            std::cout << "Length: " << length << " km" << std::endl;
-            std::cout << "Diameter: " << diameter << " mm" << std::endl;
-            if (status == false) {
-                std::cout << "Status: not on repair" << std::endl;
-            } else {
-                std::cout << "Status: on repair" << std::endl;
-            }
-            std::cout << "-----------------------------------" << std::endl;
-        }
-    }
-
-    void readFromConsole() {
-        std::cout << std::endl << "Name: "; 
-        std::getline(std::cin >> std::ws, name);
-
-        while (true) {
-            std::cout << "Length ('km'): ";
-            if (validation(length) && length >= 0) {
-                break;
-            }
-            std::cout << std::endl << "[Error] Length must be double and more than zero! Try again!" << std::endl;
-        }
-
-        while (true) {
-            std::cout << "Diameter ('mm'): ";
-            if (validation(diameter) && diameter >= 0) {
-                break;
-            }
-            std::cout << std::endl << "[Error] Diameter must be integer and more than zero! Try again!" << std::endl;
-        }
-
-    }
-
-    void changeStatus() {
-        getInfo();
-        if (name != "Undefined" || length != 0.0 || diameter != 0) {
-            int choice;
-            do {
-                std::cout << std::endl << "Change the current status?" << std::endl;
-                std::cout << "[1] Yes" << std::endl;
-                std::cout << "[0] No" << std::endl;
-
-                while (true) {
-                    std::cout << "Your choice: ";
-                    if (validation(choice) && choice >= 1 && choice <= 2) {
-                        break;
-                    }
-                    std::cout << std::endl << "[Error] Invalid choice! Try again!" << std::endl;
-                }
-
-                switch (choice) {
-                    case 1:
-                        status = !status;
-                        std::cout << std::endl << "Pipeline status has been changed!" << std::endl;
-                        choice = 0;
-                        break;
-                    case 0:
-                        break;
-                }
-            } while (choice != 0);
-        }
-    }
-
-    void saveToFile(std::ofstream& file) {
-        if (name == "Undefined" || length == 0.0 || diameter == 0) {
-            std::cout << std::endl << "[Pipeline] There is nothing to save!" << std::endl;
-        } else {
-            file << "Pipeline" << std::endl;
-            file << name << std::endl; 
-            file << length << std::endl;
-            file << diameter << std::endl;
-            file << status << std::endl;
-            std::cout << std::endl << "Pipeline was successfully saved!" << std::endl;
-        }
-    }
-
-    void loadFromFile(std::ifstream& file) {
-        std::getline(file >> std::ws, name);
-        if (file >> length >> diameter >> status) {
-            std::cout << std::endl << "Pipeline was successfully loaded!" << std::endl;
-        } else {
-            std::cout << std::endl << "[Error] Wrong data in file!" << std::endl;
-        }
-    }
-
-    Pipeline() {
-        name = "Undefined"; length = 0.0; diameter = 0; status = false;
-    }
-};
-
-class CompressorStation {
-    std::string name;
-    int shops_count;
-    int station_class;
-    int shops_in_work;
-
-public:
-    void getInfo() {
-        if (name == "Undefined" || shops_count == 0 || shops_in_work == 0 || station_class == 0) {
-            std::cout << std::endl <<  "Compressor station has not been created yet or created with incorrect parameters!" << std::endl;
-        } else {
-            std::cout << std::endl << "--------Compressor station---------" << std::endl;
-            std::cout << "Name: " << name << std::endl;
-            std::cout << "Shops count: " << shops_count << std::endl;
-            std::cout << "Shops in work: " << shops_in_work << std::endl;
-            std::cout << "Station class: " << station_class << std::endl;
-            std::cout << "-----------------------------------" << std::endl;
-        }
-    }
-
-    void readFromConsole() {
-        std::cout << std::endl << "Name: "; 
-        std::getline(std::cin>>std::ws, name);
-
-        while (true) {
-            std::cout << "Count of shops: ";
-            if (validation(shops_count) && shops_count >= 0) {
-                break;
-            }
-            std::cout << std::endl << "[Error] Count of shops must be integer and more than zero! Try again!" << std::endl;
-        }
-
-        while (true) {
-            std::cout << "Count of working shops: ";
-            if (validation(shops_in_work) && (shops_in_work >= 0 && shops_in_work <= shops_count)) {
-                break;
-            }
-            std::cout << std::endl << "[Error] Count of working shops must be integer and less then count of shops! Try again!" << std::endl;
-        }
-
-        while (true) {
-            std::cout << "Class of compressor station [1-10]: ";
-            if (validation(station_class) && (station_class >= 1 && station_class <= 10)) {
-                break;
-            }
-            std::cout << std::endl << "[Error] Class of compressor station must be integer in range [1-10]! Return to main menu!" << std::endl;
-        }
-    }
-
-    void changeCountOfWorkingShops() {
-        getInfo();
-        if (name != "Undefined" || shops_count != 0 || shops_in_work != 0 || station_class != 0) {
-            while (true) {
-                std::cout << std::endl << "New count of working shops: ";
-                if (validation(shops_in_work) && (shops_in_work >= 0 && shops_in_work <= shops_count)) {
-                    break;
-                }
-                std::cout << std::endl << "[Error] Count of working shops must be integer and less then count of shops! Try again!" << std::endl;
-            }
-        }
-    }
-
-    void saveToFile(std::ofstream& file) {
-        if (name == "Undefined" || shops_count == 0 || shops_in_work == 0 || station_class == 0) {
-            std::cout << "[Compressor Station] There is nothing to save!" << std::endl;
-        } else {
-            file << "Station" << std::endl;
-            file << name << std::endl;
-            file << shops_count << std::endl;
-            file << shops_in_work << std::endl; 
-            file << station_class << std::endl;
-            std::cout << "Compressor station was successfully saved!" << std::endl;
-        }
-    }
-
-    void loadFromFile(std::ifstream& file) {
-        std::getline(file >> std::ws, name);
-        if (file >> shops_count >> shops_in_work >> station_class) {
-            std::cout << std::endl << "Compressor station was successfully loaded!" << std::endl;
-        } else {
-            std::cout << std::endl << "[Error] Wrong data in file!" << std::endl;
-        }
-    }
-
-    CompressorStation() {
-        name = "Undefined"; shops_count = 0; shops_in_work = 0; station_class = 0;
-    }
-};
-
 int main() {
-    std::unordered_map<int, Pipeline> pipelines = {};
-    std::unordered_map<int, CompressorStation> stations = {};
+    std::unordered_map<int, Pipe> pipes = {};
+    std::unordered_map<int, Station> stations = {};
     system("cls");
 
     int choice;
     do {
         std::cout << std::endl;
         std::cout << "-------------Main menu-------------" << std::endl;
-        std::cout << "[1] Create new pipeline" << std::endl;
+        std::cout << "[1] Create new pipe" << std::endl;
         std::cout << "[2] Create new compressor station" << std::endl;
         std::cout << "[3] Show all objects" << std::endl;
-        std::cout << "[4] Edit pipeline" << std::endl;
-        std::cout << "[5] Edit compressor station" << std::endl;
+        std::cout << "[4] Edit pipes" << std::endl;
+        std::cout << "[5] Edit compressor stations" << std::endl;
         std::cout << "[6] Save to file" << std::endl;
         std::cout << "[7] Load from file" << std::endl;
         std::cout << "[0] Exit" << std::endl;
@@ -244,40 +32,40 @@ int main() {
 
         switch(choice) {
             case 1: {
-                Pipeline pipeline = Pipeline();
-                pipeline.readFromConsole();
+                Pipe pipe = Pipe();
+                pipe.readFromConsole();
                 std::cout << std::endl << "Successful creation! Return to main menu!" << std::endl;
-                pipelines[generateID(pipelines)] = pipeline;
+                pipes[generateID(pipes)] = pipe;
                 break;
             }
             case 2: {
-                CompressorStation station = CompressorStation();
+                Station station = Station();
                 station.readFromConsole();
                 std::cout << std::endl << "Successful creation! Return to main menu!" << std::endl;
                 stations[generateID(stations)] = station;
                 break;
             }
             case 3: {
-                std::map<int, Pipeline> sorted_pipelines(
-                    pipelines.begin(), pipelines.end()
+                std::map<int, Pipe> sorted_pipes(
+                    pipes.begin(), pipes.end()
                 );
-                for (auto& [id, pipeline] : sorted_pipelines) {
+                for (auto& [id, pipe] : sorted_pipes) {
                     std::cout << std::endl << id;
-                    pipeline.getInfo();
+                    pipe.getInfo();
                 }
-                std::map<int, CompressorStation> sorted_stations(
+                std::map<int, Station> sorted_stations(
                     stations.begin(), stations.end()
                 );
-                for (auto& [id, compressor_station] : sorted_stations) {
+                for (auto& [id, station] : sorted_stations) {
                     std::cout << std::endl << id;
-                    compressor_station.getInfo();
+                    station.getInfo();
                 }
                 std::cout << std::endl << "Return to main menu!" << std::endl;
                 break;
             }
             case 4:
                 // pipeline.changeStatus();
-                // std::cout << std::endl << "Return to main menu!" << std::endl;
+                std::cout << std::endl << "Return to main menu!" << std::endl;
                 break;
             case 5:
                 // compressorstation.changeCountOfWorkingShops();
