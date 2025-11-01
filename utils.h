@@ -1,5 +1,8 @@
-#include <iostream>
+#pragma once
+#include "Pipe.h"
+#include "Station.h"
 #include <unordered_map>
+#include <fstream>
 
 template<typename T> 
 bool validation(T& value) {
@@ -18,4 +21,28 @@ int generateID(std::unordered_map<int, T> &objects) {
         id++;
     }
     return id;
+}
+
+inline void loadFromFileTo(std::unordered_map<int, Pipe>& pipes, 
+                        std::unordered_map<int, Station>& stations) {
+
+    std::string filename;
+    std::cout << std::endl << "Filename: ";
+    std::getline(std::cin >> std::ws, filename);
+    std::ifstream file(filename);
+
+    std::string line;
+    int id;
+    if (!file.is_open()) {
+        std::cout << std::endl << "[Error] File was not opened!" << std::endl; 
+    } else {  
+        while (file >> line >> id) {
+            if (line == "Pipe") { 
+                pipes[id].loadFromFile(file); 
+            }
+            if (line == "Station") { 
+                stations[id].loadFromFile(file); 
+            }
+        }
+    }
 }

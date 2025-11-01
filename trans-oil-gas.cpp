@@ -84,21 +84,8 @@ int main() {
                 break;
             }
             case 7: {
-                // std::ifstream file("save-load-file.txt");
-                // if (!file.is_open()) {
-                //     std::cout << std::endl << "[Error] File was not opened!" << std::endl;
-                // }
-                
-                // std::string line;
-                // while (file >> line) {
-                //     if (line == "Pipeline") {
-                //         pipeline.loadFromFile(file);
-                //     }
-                //     if (line == "Station") {
-                //         compressorstation.loadFromFile(file);
-                //     }
-                // }
-                // std::cout<< std::endl << "Return to main menu!" << std::endl;
+                loadFromFileTo(pipes, stations);
+                std::cout<< std::endl << "Return to main menu!" << std::endl;
                 break;
             }
             case 0:
