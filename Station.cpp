@@ -61,7 +61,6 @@ void Station::saveToFile(std::ofstream& file) {
     if (name == "Undefined" || shops_count == 0 || shops_in_work == 0 || station_class == 0) {
         std::cout << "[Compressor Station] There is nothing to save!" << std::endl;
     } else {
-        file << "Station" << std::endl;
         file << name << std::endl;
         file << shops_count << std::endl;
         file << shops_in_work << std::endl; 
@@ -73,7 +72,7 @@ void Station::saveToFile(std::ofstream& file) {
 void Station::loadFromFile(std::ifstream& file) {
     std::getline(file >> std::ws, name);
     if (file >> shops_count >> shops_in_work >> station_class) {
-        std::cout << std::endl << "Compressor station was successfully loaded!" << std::endl;
+        std::cout << "Compressor station was successfully loaded!" << std::endl;
     } else {
         std::cout << std::endl << "[Error] Wrong data in file!" << std::endl;
     }

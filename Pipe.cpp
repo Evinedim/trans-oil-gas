@@ -74,19 +74,18 @@ void Pipe::saveToFile(std::ofstream& file) {
     if (name == "Undefined" || length == 0.0 || diameter == 0) {
         std::cout << std::endl << "[Pipe] There is nothing to save!" << std::endl;
     } else {
-        file << "Pipeline" << std::endl;
         file << name << std::endl; 
         file << length << std::endl;
         file << diameter << std::endl;
         file << status << std::endl;
-        std::cout << std::endl << "Pipe was successfully saved!" << std::endl;
+        std::cout << "Pipe was successfully saved!" << std::endl;
     }
 }
 
 void Pipe::loadFromFile(std::ifstream& file) {
     std::getline(file >> std::ws, name);
     if (file >> length >> diameter >> status) {
-        std::cout << std::endl << "Pipe was successfully loaded!" << std::endl;
+        std::cout << "Pipe was successfully loaded!" << std::endl;
     } else {
         std::cout << std::endl << "[Error] Wrong data in file!" << std::endl;
     }

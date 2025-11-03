@@ -32,38 +32,22 @@ int main() {
 
         switch(choice) {
             case 1: {
-                Pipe pipe = Pipe();
-                pipe.readFromConsole();
+                pipes[generateID(pipes)].readFromConsole();
                 std::cout << std::endl << "Successful creation! Return to main menu!" << std::endl;
-                pipes[generateID(pipes)] = pipe;
                 break;
             }
             case 2: {
-                Station station = Station();
-                station.readFromConsole();
+                stations[generateID(stations)].readFromConsole(); 
                 std::cout << std::endl << "Successful creation! Return to main menu!" << std::endl;
-                stations[generateID(stations)] = station;
                 break;
             }
             case 3: {
-                std::map<int, Pipe> sorted_pipes(
-                    pipes.begin(), pipes.end()
-                );
-                for (auto& [id, pipe] : sorted_pipes) {
-                    std::cout << std::endl << id;
-                    pipe.getInfo();
-                }
-                std::map<int, Station> sorted_stations(
-                    stations.begin(), stations.end()
-                );
-                for (auto& [id, station] : sorted_stations) {
-                    std::cout << std::endl << id;
-                    station.getInfo();
-                }
+                getInfo(pipes, stations);
                 std::cout << std::endl << "Return to main menu!" << std::endl;
                 break;
             }
             case 4:
+
                 // pipeline.changeStatus();
                 std::cout << std::endl << "Return to main menu!" << std::endl;
                 break;
@@ -72,15 +56,8 @@ int main() {
                 // std::cout << std::endl << "Return to main menu!" << std::endl;
                 break;
             case 6: {
-                // std::ofstream file("save-load-file.txt");
-                // if (!file.is_open()) {
-                //     std::cout << "[Error] File was not opened!" << std::endl;
-                // }
-
-                // pipeline.saveToFile(file);
-                // compressorstation.saveToFile(file);
-                
-                // std::cout << std::endl << "Return to main menu!" << std::endl;
+                saveObjectsFrom(pipes, stations);
+                std::cout << std::endl << "Return to main menu!" << std::endl;
                 break;
             }
             case 7: {
