@@ -2,6 +2,7 @@
 #include "Pipe.h"
 #include "Station.h"
 #include <unordered_map>
+#include <map>
 #include <fstream>
 
 template<typename T> 
@@ -23,22 +24,35 @@ int generateID(std::unordered_map<int, T> &objects) {
     return id;
 }
 
-inline void getInfo(std::unordered_map<int, Pipe>& pipes, 
-                std::unordered_map<int, Station>& stations) {
+template<typename T>
+void getInfo(std::unordered_map<int, T>& objects) {
 
-    std::map<int, Pipe> sorted_pipes(
-        pipes.begin(), pipes.end()
+    std::map<int, T> sorted_objects(
+        objects.begin(), objects.end()
     );
-    for (auto& [id, pipe] : sorted_pipes) {
+    for (auto& [id, object] : objects) {
         std::cout << std::endl << id;
-        pipe.getInfo();
+        object.getInfo();
     }
-    std::map<int, Station> sorted_stations(
-        stations.begin(), stations.end()
+}
+
+template<typename T, typename U>
+ void getInfo(std::unordered_map<int, T>& objects1, 
+            std::unordered_map<int, U>& objects2) {
+
+    std::map<int, T> sorted_objects1(
+        objects1.begin(), objects1.end()
     );
-    for (auto& [id, station] : sorted_stations) {
+    for (auto& [id, object1] : objects1) {
         std::cout << std::endl << id;
-        station.getInfo();
+        object1.getInfo();
+    }
+    std::map<int, U> sorted_objects2(
+        objects2.begin(), objects2.end()
+    );
+    for (auto& [id, object2] : objects2) {
+        std::cout << std::endl << id;
+        object2.getInfo();
     }
 }
 

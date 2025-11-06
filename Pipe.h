@@ -9,6 +9,10 @@ class Pipe {
     bool status;
 
 public:
+    std::string getName() { return name; }
+
+    int getStatus() { return status; }
+
     void getInfo();
 
     void readFromConsole();

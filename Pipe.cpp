@@ -41,32 +41,9 @@ void Pipe::readFromConsole() {
 }
 
 void Pipe::changeStatus() {
-    getInfo();
     if (name != "Undefined" || length != 0.0 || diameter != 0) {
-        int choice;
-        do {
-            std::cout << std::endl << "Change the current status?" << std::endl;
-            std::cout << "[1] Yes" << std::endl;
-            std::cout << "[0] No" << std::endl;
-
-            while (true) {
-                std::cout << "Your choice: ";
-                if (validation(choice) && choice >= 1 && choice <= 2) {
-                    break;
-                }
-                std::cout << std::endl << "[Error] Invalid choice! Try again!" << std::endl;
-            }
-
-            switch (choice) {
-                case 1:
-                    status = !status;
-                    std::cout << std::endl << "Pipe status has been changed!" << std::endl;
-                    choice = 0;
-                    break;
-                case 0:
-                    break;
-            }
-        } while (choice != 0);
+        status = !status;
+        std::cout << std::endl << "Pipe status has been changed!" << std::endl;
     }
 }
 
