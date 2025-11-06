@@ -17,7 +17,7 @@ public:
 
     void readFromConsole();
 
-    void changeStatus();
+    void change();
 
     void saveToFile(std::ofstream& file);
     void loadFromFile(std::ifstream& file);

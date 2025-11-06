@@ -5,6 +5,28 @@
 #include <map>
 #include <fstream>
 
+// #define INPUT_LINE(in, str) getline(in>>std::ws, str); \
+// 						std::cerr << str << std::endl
+
+// class redirect_output_wrapper
+// {
+//     std::ostream& stream;
+//     std::streambuf* const old_buf;
+// public:
+// 	redirect_output_wrapper(std::ostream& src)
+// 		:old_buf(src.rdbuf()), stream(src)
+//     {
+//     }
+
+//     ~redirect_output_wrapper() {
+// 		stream.rdbuf(old_buf);
+//     }
+// 	void redirect (std::ostream& dest)
+// 	{
+// 		stream.rdbuf(dest.rdbuf());
+// 	}
+// };
+
 template<typename T> 
 bool validation(T& value) {
     if (std::cin >> value && std::cin.peek() == '\n') {
@@ -33,26 +55,6 @@ void getInfo(std::unordered_map<int, T>& objects) {
     for (auto& [id, object] : objects) {
         std::cout << std::endl << id;
         object.getInfo();
-    }
-}
-
-template<typename T, typename U>
- void getInfo(std::unordered_map<int, T>& objects1, 
-            std::unordered_map<int, U>& objects2) {
-
-    std::map<int, T> sorted_objects1(
-        objects1.begin(), objects1.end()
-    );
-    for (auto& [id, object1] : objects1) {
-        std::cout << std::endl << id;
-        object1.getInfo();
-    }
-    std::map<int, U> sorted_objects2(
-        objects2.begin(), objects2.end()
-    );
-    for (auto& [id, object2] : objects2) {
-        std::cout << std::endl << id;
-        object2.getInfo();
     }
 }
 
@@ -99,5 +101,185 @@ inline void saveObjectsFrom(std::unordered_map<int, Pipe>& pipes,
             file << "Station" << std::endl << id << std::endl;
             station.saveToFile(file);
         } 
+    }
+}
+
+inline void filterPipesByStatus(std::unordered_map<int, Pipe>& pipes) {
+
+    int choice, status;
+
+    std::unordered_map<int, Pipe> filtered_pipes = {};
+
+    std::cout << std::endl << "Status: ";
+    if (validation(status) && status >= 0 && status <= 1) {
+        for (auto& [id, pipe] : pipes) {
+            if (pipe.getStatus() == status) {
+                filtered_pipes[id] = pipe;
+            }
+        }
+    } else {
+        std::cout << std::endl << "[Error] Invalid value! Try again!" << std::endl;
+    }
+
+    getInfo(filtered_pipes);
+
+    do {
+        if (filtered_pipes.empty()) {
+            std::cout << "Nothing was found!" << std::endl;
+            break;
+        }
+
+        std::cout << std::endl << "Do you want to change the current status of all found pipes?" << std::endl;
+        std::cout << "[1] Yes" << std::endl;
+        std::cout << "[0] No" << std::endl;
+
+        while (true) {
+            std::cout << "Your choice: ";
+            if (validation(choice) && choice >= 0 && choice <= 1) {
+                break;
+            }
+            std::cout << std::endl << "[Error] Invalid choice! Try again!" << std::endl;
+        }
+
+        switch (choice) {
+            case 1:
+                for (auto& [id, pipe] : pipes) {
+                    if (pipe.getStatus() == status) {
+                        std::cout << std::endl << "[" << id << "] ";
+                        pipe.change();
+                    }
+                }
+                choice = 0;
+                break;
+            case 0:
+                break;
+        }
+    } while (choice != 0);
+}
+
+inline void filterStationsByCountOfWorkingShops(std::unordered_map<int, Station>& stations) {
+
+    int choice, shops_in_work;
+
+    std::unordered_map<int, Station> filtered_stations = {};
+
+    std::cout << std::endl << "Count of working shops: ";
+    if (validation(shops_in_work) && shops_in_work >= 0) {
+        for (auto& [id, station] : stations) {
+            if (station.getShopsInWork() == shops_in_work) {
+                filtered_stations[id] = station;
+            }
+        }
+    } else {
+        std::cout << std::endl << "[Error] Invalid value! Try again!" << std::endl;
+    }
+
+    getInfo(filtered_stations);
+
+    do {
+        if (filtered_stations.empty()) {
+            std::cout << "Nothing was found!" << std::endl;
+            break;
+        }
+
+        std::cout << std::endl << "Do you want to change the current count of working shops of all found pipes?" << std::endl;
+        std::cout << "[1] Yes" << std::endl;
+        std::cout << "[0] No" << std::endl;
+
+        while (true) {
+            std::cout << "Your choice: ";
+            if (validation(choice) && choice >= 0 && choice <= 1) {
+                break;
+            }
+            std::cout << std::endl << "[Error] Invalid choice! Try again!" << std::endl;
+        }
+
+        switch (choice) {
+            case 1:
+                for (auto& [id, station] : stations) {
+                    if (station.getShopsInWork() == shops_in_work) {
+                        station.change();
+                    }
+                }
+                choice = 0;
+                break;
+            case 0:
+                break;
+        }
+    } while (choice != 0);
+}
+
+template<typename T>
+void filterObjectsByName(std::unordered_map<int, T>& objects) {
+
+    int choice;
+    std::string name;
+
+    std::cout << std::endl << "Name: ";
+    std::getline(std::cin >> std::ws, name);
+
+    std::unordered_map<int, T> filtered_objects;
+
+    for (auto& [id, object] : objects) {
+        if (object.getName() == name) {
+            filtered_objects[id] = object;
+        }
+    }
+
+    getInfo(filtered_objects);
+
+    do {
+        if (filtered_objects.empty()) {
+            std::cout << "Nothing was found!" << std::endl;
+            break;
+        }
+
+        std::cout << std::endl << "Do you want to change all found objects?" << std::endl;
+        std::cout << "[1] Yes" << std::endl;
+        std::cout << "[0] No" << std::endl;
+
+        while (true) {
+            std::cout << "Your choice: ";
+            if (validation(choice) && choice >= 0 && choice <= 1) {
+                break;
+            }
+            std::cout << std::endl << "[Error] Invalid choice! Try again!" << std::endl;
+        }
+
+        switch (choice) {
+            case 1:
+                for (auto& [id, object] : objects) {
+                    if (object.getName() == name) {
+                        std::cout << std::endl << "[" << id << "] ";
+                        object.change();
+                    }
+                }
+                choice = 0;
+                break;
+            case 0:
+                break;
+        }
+    } while (choice != 0);
+}
+
+template<typename T>
+void changeById(int id, std::unordered_map<int, T>& objects) {
+    getInfo(objects);
+    std::cout << std::endl << "Choose id of pipe: ";
+    if (validation(id) && objects.count(id) != 0) {
+        objects[id].change();
+    } else {
+        std::cout << std::endl << "[Error] Invalid choice! Try again!" << std::endl;
+    }
+}
+
+template<typename T>
+void deleteObjectById(int id, std::unordered_map<int, T>& objects) {
+    getInfo(objects);
+    std::cout << std::endl << "Choose id: ";
+    if (validation(id) && objects.count(id) != 0) {
+        objects.erase(id);
+    } else {
+        std::cout << std::endl << "[Error] Invalid choice! Try again!" << std::endl;
     }
 }
