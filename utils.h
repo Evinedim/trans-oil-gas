@@ -5,7 +5,7 @@
 #include <map>
 #include <fstream>
 
-#define INPUT_LINE(in, str) getline(in>>std::ws, str); \
+#define INPUT_LINE(in, str) getline(in >> std::ws, str); \
 						std::cerr << str << std::endl
 
 class redirect_output_wrapper
@@ -40,11 +40,8 @@ bool validation(T& value) {
 
 template<typename T>
 int generateID(std::unordered_map<int, T> &objects) {
-    int id = 0;
-    while (objects.count(id)) {
-        id++;
-    }
-    return id;
+    static int id = 1;
+    return id++;
 }
 
 template<typename T>
@@ -64,7 +61,7 @@ inline void loadFromFileTo(std::unordered_map<int, Pipe>& pipes,
 
     std::string filename;
     std::cout << std::endl << "Filename: ";
-    std::getline(std::cin >> std::ws, filename);
+    INPUT_LINE(std::cin >> std::ws, filename);
     std::ifstream file(filename);
 
     std::string line;
@@ -88,7 +85,7 @@ inline void saveObjectsFrom(std::unordered_map<int, Pipe>& pipes,
     
     std::string filename;
     std::cout << std::endl << "Filename: ";
-    std::getline(std::cin >> std::ws, filename);
+    INPUT_LINE(std::cin >> std::ws, filename);
     std::ofstream file(filename);
 
     if (!file.is_open()) {
@@ -217,7 +214,7 @@ void filterObjectsByName(std::unordered_map<int, T>& objects) {
     std::string name;
 
     std::cout << std::endl << "Name: ";
-    std::getline(std::cin >> std::ws, name);
+    INPUT_LINE(std::cin >> std::ws, name);
 
     std::unordered_map<int, T> filtered_objects;
 
@@ -264,7 +261,9 @@ void filterObjectsByName(std::unordered_map<int, T>& objects) {
 }
 
 template<typename T>
-void changeById(int id, std::unordered_map<int, T>& objects) {
+void changeById(std::unordered_map<int, T>& objects) {
+    int id;
+
     getInfo(objects);
     std::cout << std::endl << "Choose id of pipe: ";
     if (validation(id) && objects.count(id) != 0) {
@@ -275,7 +274,9 @@ void changeById(int id, std::unordered_map<int, T>& objects) {
 }
 
 template<typename T>
-void deleteObjectById(int id, std::unordered_map<int, T>& objects) {
+void deleteObjectById(std::unordered_map<int, T>& objects) {
+    int id;
+
     getInfo(objects);
     std::cout << std::endl << "Choose id: ";
     if (validation(id) && objects.count(id) != 0) {

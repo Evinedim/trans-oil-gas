@@ -70,7 +70,7 @@ void Station::saveToFile(std::ofstream& file) {
 }
 
 void Station::loadFromFile(std::ifstream& file) {
-    INPUT_LINE(file >> std::ws, name);
+    std::getline(file >> std::ws, name);
     if (file >> shops_count >> shops_in_work >> station_class) {
         std::cout << "Compressor station was successfully loaded!" << std::endl;
     } else {

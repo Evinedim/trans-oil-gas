@@ -60,7 +60,7 @@ void Pipe::saveToFile(std::ofstream& file) {
 }
 
 void Pipe::loadFromFile(std::ifstream& file) {
-    INPUT_LINE(file >> std::ws, name);
+    std::getline(file >> std::ws, name);
     if (file >> length >> diameter >> status) {
         std::cout << "Pipe was successfully loaded!" << std::endl;
     } else {

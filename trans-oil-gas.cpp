@@ -8,16 +8,20 @@
 int main() {
 
     redirect_output_wrapper cerr_out(std::cerr);
-	std::string time = std::format("{:%d_%m_%Y %H_%M_%OS}", std::chrono::system_clock::now());
-	std::ofstream logfile("log_"+ time);
-	if (logfile)
-		cerr_out.redirect(logfile);
+
+    auto utc0 = std::chrono::system_clock::now();
+    auto utc3 = utc0 + std::chrono::hours(3);
+
+	std::string time = std::format("{:%d_%m_%Y %H_%M_%OS}", utc3);
+
+	std::ofstream logfile("logfiles/log " + time + ".txt");
+	if (logfile) { cerr_out.redirect(logfile); }
 
     std::unordered_map<int, Pipe> pipes = {};
     std::unordered_map<int, Station> stations = {};
     system("cls");
 
-    int choice, id, pipe_choice, station_choice;
+    int choice, pipe_choice, station_choice;
 
     do {
         std::cout << std::endl;
@@ -62,7 +66,6 @@ int main() {
                 }
                 getInfo(stations);
 
-                std::cout << std::endl << "Return to main menu!" << std::endl;
                 break;
             }
             case 4: {
@@ -99,11 +102,11 @@ int main() {
                                 break;
                             }
                             case 3: {
-                                changeById(id, pipes);
+                                changeById(pipes);
                                 break;
                             }
                             case 4: {
-                                deleteObjectById(id, pipes);
+                                deleteObjectById(pipes);
                                 break;
                             }
                             case 5: {
@@ -114,8 +117,12 @@ int main() {
                             case 0:
                                 break;
                         }
+
+                        if (pipe_choice != 0) {
+                            std::cout << std::endl << "Return to pipes menu!" << std::endl;
+                        }
+
                     } while (pipe_choice != 0);
-                std::cout << std::endl << "Return to main menu!" << std::endl;
                 }
                 break;
             }
@@ -153,11 +160,11 @@ int main() {
                                 break;
                             }
                             case 3: {
-                                changeById(id, stations);
+                                changeById(stations);
                                 break;
                             }
                             case 4: {
-                                deleteObjectById(id, stations);
+                                deleteObjectById(stations);
                                 break;
                             }
                             case 5: {
@@ -168,23 +175,29 @@ int main() {
                             case 0:
                                 break;
                         }
+
+                        if (station_choice != 0) {
+                            std::cout << std::endl << "Return to stations menu!" << std::endl;
+                        }
                     } while (station_choice != 0);
-                std::cout << std::endl << "Return to main menu!" << std::endl;
                 }
                 break;
             case 6: {
                 saveObjectsFrom(pipes, stations);
-                std::cout << std::endl << "Return to main menu!" << std::endl;
                 break;
             }
             case 7: {
                 loadFromFileTo(pipes, stations);
-                std::cout<< std::endl << "Return to main menu!" << std::endl;
                 break;
             }
             case 0:
                 break;
-        }   
+        }
+
+        if (choice != 0) {
+            std::cout << std::endl << "Return to main menu!" << std::endl;  
+        } 
+
     } while (choice != 0);
 
     return 0;
