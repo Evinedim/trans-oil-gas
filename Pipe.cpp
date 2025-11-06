@@ -21,7 +21,7 @@ void Pipe::getInfo() {
 
 void Pipe::readFromConsole() {
     std::cout << std::endl << "Name: "; 
-    std::getline(std::cin >> std::ws, name);
+    INPUT_LINE(std::cin >> std::ws, name);
 
     while (true) {
         std::cout << "Length ('km'): ";
@@ -60,7 +60,7 @@ void Pipe::saveToFile(std::ofstream& file) {
 }
 
 void Pipe::loadFromFile(std::ifstream& file) {
-    std::getline(file >> std::ws, name);
+    INPUT_LINE(file >> std::ws, name);
     if (file >> length >> diameter >> status) {
         std::cout << "Pipe was successfully loaded!" << std::endl;
     } else {

@@ -2,16 +2,16 @@
 #include "Station.h"
 #include "utils.h"
 #include <map>
-// #include <chrono>
-// #include <format>
+#include <chrono>
+#include <format>
 
 int main() {
 
-    // redirect_output_wrapper cerr_out(std::cerr);
-	// std::string time = std::format("{:%d_%m_%Y %H_%M_%OS}", std::chrono::system_clock::now());
-	// std::ofstream logfile("log_"+ time);
-	// if (logfile)
-	// 	cerr_out.redirect(logfile);
+    redirect_output_wrapper cerr_out(std::cerr);
+	std::string time = std::format("{:%d_%m_%Y %H_%M_%OS}", std::chrono::system_clock::now());
+	std::ofstream logfile("log_"+ time);
+	if (logfile)
+		cerr_out.redirect(logfile);
 
     std::unordered_map<int, Pipe> pipes = {};
     std::unordered_map<int, Station> stations = {};

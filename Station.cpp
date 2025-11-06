@@ -17,7 +17,7 @@ void Station::getInfo() {
 
 void Station::readFromConsole() {
     std::cout << std::endl << "Name: "; 
-    std::getline(std::cin>>std::ws, name);
+    INPUT_LINE(std::cin>>std::ws, name);
 
     while (true) {
         std::cout << "Count of shops: ";
@@ -70,7 +70,7 @@ void Station::saveToFile(std::ofstream& file) {
 }
 
 void Station::loadFromFile(std::ifstream& file) {
-    std::getline(file >> std::ws, name);
+    INPUT_LINE(file >> std::ws, name);
     if (file >> shops_count >> shops_in_work >> station_class) {
         std::cout << "Compressor station was successfully loaded!" << std::endl;
     } else {

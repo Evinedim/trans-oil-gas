@@ -5,31 +5,32 @@
 #include <map>
 #include <fstream>
 
-// #define INPUT_LINE(in, str) getline(in>>std::ws, str); \
-// 						std::cerr << str << std::endl
+#define INPUT_LINE(in, str) getline(in>>std::ws, str); \
+						std::cerr << str << std::endl
 
-// class redirect_output_wrapper
-// {
-//     std::ostream& stream;
-//     std::streambuf* const old_buf;
-// public:
-// 	redirect_output_wrapper(std::ostream& src)
-// 		:old_buf(src.rdbuf()), stream(src)
-//     {
-//     }
+class redirect_output_wrapper
+{
+    std::ostream& stream;
+    std::streambuf* const old_buf;
+public:
+	redirect_output_wrapper(std::ostream& src)
+		:old_buf(src.rdbuf()), stream(src)
+    {
+    }
 
-//     ~redirect_output_wrapper() {
-// 		stream.rdbuf(old_buf);
-//     }
-// 	void redirect (std::ostream& dest)
-// 	{
-// 		stream.rdbuf(dest.rdbuf());
-// 	}
-// };
+    ~redirect_output_wrapper() {
+		stream.rdbuf(old_buf);
+    }
+	void redirect (std::ostream& dest)
+	{
+		stream.rdbuf(dest.rdbuf());
+	}
+};
 
 template<typename T> 
 bool validation(T& value) {
     if (std::cin >> value && std::cin.peek() == '\n') {
+        std::cerr << value << std::endl;
         return 1;
     }
     std::cin.clear();
