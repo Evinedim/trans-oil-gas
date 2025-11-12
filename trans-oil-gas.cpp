@@ -79,14 +79,15 @@ int main() {
                         std::cout << "[1] Filter pipes by name" << std::endl;
                         std::cout << "[2] Filter pipes by status" << std::endl;
                         std::cout << "[3] Change status of certain pipe" << std::endl;
-                        std::cout << "[4] Delete certain pipe" << std::endl;
-                        std::cout << "[5] Delete all pipes" << std::endl;
+                        std::cout << "[4] Change status of all pipes" << std::endl;
+                        std::cout << "[5] Delete certain pipe" << std::endl;
+                        std::cout << "[6] Delete all pipes" << std::endl;
                         std::cout << "[0] Exit" << std::endl;
                         std::cout << "-----------------------------------" << std::endl;
 
                         while (true) {
                             std::cout << "Choose the option: ";
-                            if (validation(pipe_choice) && pipe_choice >= 0 && pipe_choice <= 5) {
+                            if (validation(pipe_choice) && pipe_choice >= 0 && pipe_choice <= 6) {
                                 break;
                             }
                             std::cout << std::endl << "[Error] Invalid choice! Try again!" << std::endl;
@@ -102,14 +103,17 @@ int main() {
                                 break;
                             }
                             case 3: {
-                                changeAllPipes(pipes);
-                                break;
-                            }
-                            case 4: {
                                 changePipeById(pipes);
                                 break;
                             }
+                            case 4: {
+                                changeAllObjects(pipes);
+                                break;
+                            }
                             case 5: {
+                                deleteObjectById(pipes);
+                            }
+                            case 6: {
                                 pipes.clear();
                                 std::cout << std::endl << "All pipes was deleted!" << std::endl;
                                 break;
@@ -133,18 +137,19 @@ int main() {
                 } else {
                     do {
                         std::cout << std::endl;
-                        std::cout << "------------------Stations menu-------------------" << std::endl;
+                        std::cout << "--------------------Stations menu---------------------" << std::endl;
                         std::cout << "[1] Filter stations by name" << std::endl;
                         std::cout << "[2] Filter stations by count of shops in work" << std::endl;
-                        std::cout << "[3] Change count shops in work of certain station" << std::endl;
-                        std::cout << "[4] Delete certain station" << std::endl;
-                        std::cout << "[5] Delete all stations" << std::endl;
+                        std::cout << "[3] Change count of shops in work of certain station" << std::endl;
+                        std::cout << "[4] Change count of shops in work of all stations" << std::endl;
+                        std::cout << "[5] Delete certain station" << std::endl;
+                        std::cout << "[6] Delete all stations" << std::endl;
                         std::cout << "[0] Exit" << std::endl;
-                        std::cout << "--------------------------------------------------" << std::endl;
+                        std::cout << "------------------------------------------------------" << std::endl;
 
                         while (true) {
                             std::cout << "Choose the option: ";
-                            if (validation(station_choice) && station_choice >= 0 && station_choice <= 5) {
+                            if (validation(station_choice) && station_choice >= 0 && station_choice <= 6) {
                                 break;
                             }
                             std::cout << std::endl << "[Error] Invalid choice! Try again!" << std::endl;
@@ -152,15 +157,15 @@ int main() {
 
                         switch(station_choice) {
                             case 1: {                                
-                                // filterObjectsByName(stations);
+                                filterStationsByName(stations);
                                 break;
                             }
                             case 2: {
-                                // filterStationsByCountOfWorkingShops(stations);
+                                filterStationsByShopsInWorkCount(stations);
                                 break;
                             }
                             case 3: {
-                                // changeObjectById(stations);
+                                changeStationsById(stations);
                                 break;
                             }
                             case 4: {
@@ -168,6 +173,10 @@ int main() {
                                 break;
                             }
                             case 5: {
+                                deleteObjectById(stations);
+                                break;
+                            }
+                            case 6: {
                                 stations.clear();
                                 std::cout << std::endl << "All stations was deleted!" << std::endl;
                                 break;

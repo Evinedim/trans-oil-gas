@@ -129,10 +129,6 @@ std::vector<int> getFilteredIds(std::unordered_map<int, T>& objects, std::functi
         }
     }
 
-    if (ids.empty()) {
-        std::cout << std::endl << "Nothing was found!" << std::endl;
-    }
-
     return ids;
 }
 
@@ -149,13 +145,13 @@ inline void changePipeById(std::unordered_map<int, Pipe>& pipes) {
     }
 }
 
-inline void changeAllPipes(std::unordered_map<int, Pipe>& pipes) {
+template<typename T>
+void changeAllObjects(std::unordered_map<int, T>& objects) {
 
-    getInfo(pipes);
-    std::cout << std::endl << "Choose id of pipe: ";
-    for (auto& [id, pipe] : pipes) {
+    getInfo(objects);
+    for (auto& [id, object] : objects) {
         std::cout << std::endl << "[" << id << "]" << std::endl;
-        pipes[id].changeStatus();
+        objects[id].changeStatus();
     }
 }
 
@@ -168,10 +164,15 @@ inline void changeAllFoundPipes(std::unordered_map<int, Pipe>& pipes, std::vecto
     std::cout << "[0] No" << std::endl;
     std::cout << "Your choice: ";
 
-    if (validation(choice) && choice >= 0 && choice <= 1) {
-        for (auto& id : ids) {
-            std::cout << std::endl << "[" << id << "]" << std::endl;
-            pipes[id].changeStatus();
+    if (validation(choice)) {
+        if (choice == 1) {
+            for (auto& id : ids) {
+                std::cout << std::endl << "[" << id << "]";
+                pipes[id].changeStatus();
+            }
+        }
+        if (choice == 0) {
+            std::cout << std::endl << "Nothing was changed!" << std::endl;
         }
     } else {
         std::cout << std::endl << "[Error] Invalid choice! Try again!" << std::endl;
@@ -189,7 +190,11 @@ inline void filterPipesByName(std::unordered_map<int, Pipe>& pipes) {
 
     std::vector<int> ids = getFilteredIds(pipes, predicate);
 
-    changeAllFoundPipes(pipes, ids);
+    if (ids.empty()) {
+        std::cout << std::endl << "Nothing was found!" << std::endl;
+    } else {
+        changeAllFoundPipes(pipes, ids);
+    }
 }
 
 inline void filterPipesByStatus(std::unordered_map<int, Pipe>& pipes) {
@@ -204,5 +209,83 @@ inline void filterPipesByStatus(std::unordered_map<int, Pipe>& pipes) {
     std::function<bool(Pipe&)> predicate = [&status](Pipe pipe) { return status == pipe.getStatus(); };
     std::vector<int> ids = getFilteredIds(pipes, predicate);
 
-    changeAllFoundPipes(pipes, ids);
+    if (ids.empty()) {
+        std::cout << std::endl << "Nothing was found!" << std::endl;
+    } else {
+        changeAllFoundPipes(pipes, ids);
+    }
+}
+
+inline void changeStationsById(std::unordered_map<int, Station>& stations) {
+    int id;
+
+    getInfo(stations);
+    std::cout << std::endl << "Choose id of station: ";
+    if (validation(id) && stations.count(id) != 0) {
+        std::cout << std::endl << "[" << id << "]" << std::endl;
+        stations[id].changeShopsInWorkCount();
+    } else {
+        std::cout << std::endl << "[Error] Invalid choice! Try again!" << std::endl;
+    }
+}
+
+inline void changeAllFoundStations(std::unordered_map<int, Station>& stations, std::vector<int> ids) {
+
+    int choice;
+
+    std::cout << std::endl << "Do you want to change all found stations?" << std::endl;
+    std::cout << "[1] Yes" << std::endl;
+    std::cout << "[0] No" << std::endl;
+    std::cout << "Your choice: ";
+
+    if (validation(choice) && choice >= 0 && choice <= 1) {
+        if (choice == 1) {
+            for (auto& id : ids) {
+                std::cout << std::endl << "[" << id << "]" << std::endl;
+                stations[id].changeShopsInWorkCount();
+            }
+        } 
+        if (choice == 0) {
+            std::cout << std::endl << "Nothing was changed!" << std::endl;
+        }
+    } else {
+        std::cout << std::endl << "[Error] Invalid choice! Try again!" << std::endl;
+    }
+}
+
+inline void filterStationsByName(std::unordered_map<int, Station>& stations) {
+
+    std::string name;
+
+    std::cout << std::endl << "Name: ";
+    INPUT_LINE(std::cin >> std::ws, name);
+
+    std::function<bool(Station&)> predicate = [&name](Station station) { return name == station.getName(); };
+
+    std::vector<int> ids = getFilteredIds(stations, predicate);
+
+    if (ids.empty()) {
+        std::cout << std::endl << "Nothing was found!" << std::endl;
+    } else {
+        changeAllFoundStations(stations, ids);
+    }
+}
+
+inline void filterStationsByShopsInWorkCount(std::unordered_map<int, Station>& stations) {
+
+    int shops_in_work;
+    std::cout << std::endl << "Count of shops in work: ";
+
+    if (!(validation(shops_in_work))) {
+        std::cout << std::endl << "[Error] Invalid value! Try again!" << std::endl;
+    }
+
+    std::function<bool(Station&)> predicate = [&shops_in_work](Station station) { return shops_in_work == station.getShopsInWorkCount(); };
+    std::vector<int> ids = getFilteredIds(stations, predicate);
+
+    if (ids.empty()) {
+        std::cout << std::endl << "Nothing was found!" << std::endl;
+    } else {
+        changeAllFoundStations(stations, ids);
+    }
 }
