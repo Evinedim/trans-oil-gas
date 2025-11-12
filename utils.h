@@ -89,7 +89,10 @@ inline void saveObjectsFrom(std::unordered_map<int, Pipe>& pipes,
 template<typename T>
 int generateID(std::unordered_map<int, T> &objects) {
     static int id = 0;
-    return id++;
+    while (objects.count(id) != 0) {
+        id++;
+    }
+    return id;
 }
 
 template<typename T>
