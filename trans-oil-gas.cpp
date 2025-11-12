@@ -102,7 +102,7 @@ int main() {
                                 break;
                             }
                             case 3: {
-                                changeById(pipes);
+                                changeAllObjects(pipes);
                                 break;
                             }
                             case 4: {
@@ -160,7 +160,7 @@ int main() {
                                 break;
                             }
                             case 3: {
-                                changeById(stations);
+                                changeObjectById(stations);
                                 break;
                             }
                             case 4: {

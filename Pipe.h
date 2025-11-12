@@ -11,7 +11,7 @@ class Pipe {
 public:
     std::string getName() { return name; }
 
-    int getStatus() { return status; }
+    int getChangeable() { return status; }
 
     void getInfo();
 

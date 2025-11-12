@@ -56,6 +56,45 @@ void getInfo(std::unordered_map<int, T>& objects) {
     }
 }
 
+template<typename T>
+void changeAllObjects(std::unordered_map<int, T>& objects) {
+    
+    int choice, changeable;
+    
+    getInfo(objects);
+
+    do {
+        if (objects.empty()) {
+            std::cout << "Nothing was found!" << std::endl;
+            break;
+        }
+
+        std::cout << std::endl << "Do you want to change all found objects?" << std::endl;
+        std::cout << "[1] Yes" << std::endl;
+        std::cout << "[0] No" << std::endl;
+
+        while (true) {
+            std::cout << "Your choice: ";
+            if (validation(choice) && choice >= 0 && choice <= 1) {
+                break;
+            }
+            std::cout << std::endl << "[Error] Invalid choice! Try again!" << std::endl;
+        }
+
+        switch (choice) {
+            case 1:
+                for (auto& [id, object] : objects) {
+                    std::cout << std::endl << "[" << id << "] ";
+                    object.change();
+                }
+                choice = 0;
+                break;
+            case 0:
+                break;
+        }
+    } while (choice != 0);
+}
+
 inline void loadFromFileTo(std::unordered_map<int, Pipe>& pipes, 
                         std::unordered_map<int, Station>& stations) {
 
@@ -111,7 +150,7 @@ inline void filterPipesByStatus(std::unordered_map<int, Pipe>& pipes) {
     std::cout << std::endl << "Status: ";
     if (validation(status) && status >= 0 && status <= 1) {
         for (auto& [id, pipe] : pipes) {
-            if (pipe.getStatus() == status) {
+            if (pipe.getChangeable() == status) {
                 filtered_pipes[id] = pipe;
             }
         }
@@ -119,41 +158,9 @@ inline void filterPipesByStatus(std::unordered_map<int, Pipe>& pipes) {
         std::cout << std::endl << "[Error] Invalid value! Try again!" << std::endl;
     }
 
-    getInfo(filtered_pipes);
-
-    do {
-        if (filtered_pipes.empty()) {
-            std::cout << "Nothing was found!" << std::endl;
-            break;
-        }
-
-        std::cout << std::endl << "Do you want to change the current status of all found pipes?" << std::endl;
-        std::cout << "[1] Yes" << std::endl;
-        std::cout << "[0] No" << std::endl;
-
-        while (true) {
-            std::cout << "Your choice: ";
-            if (validation(choice) && choice >= 0 && choice <= 1) {
-                break;
-            }
-            std::cout << std::endl << "[Error] Invalid choice! Try again!" << std::endl;
-        }
-
-        switch (choice) {
-            case 1:
-                for (auto& [id, pipe] : pipes) {
-                    if (pipe.getStatus() == status) {
-                        std::cout << std::endl << "[" << id << "] ";
-                        pipe.change();
-                    }
-                }
-                choice = 0;
-                break;
-            case 0:
-                break;
-        }
-    } while (choice != 0);
+    changeAllObjects(filtered_pipes);
 }
+
 
 inline void filterStationsByCountOfWorkingShops(std::unordered_map<int, Station>& stations) {
 
@@ -164,7 +171,7 @@ inline void filterStationsByCountOfWorkingShops(std::unordered_map<int, Station>
     std::cout << std::endl << "Count of working shops: ";
     if (validation(shops_in_work) && shops_in_work >= 0) {
         for (auto& [id, station] : stations) {
-            if (station.getShopsInWork() == shops_in_work) {
+            if (station.getChangeable() == shops_in_work) {
                 filtered_stations[id] = station;
             }
         }
@@ -180,7 +187,7 @@ inline void filterStationsByCountOfWorkingShops(std::unordered_map<int, Station>
             break;
         }
 
-        std::cout << std::endl << "Do you want to change the current count of working shops of all found pipes?" << std::endl;
+        std::cout << std::endl << "Do you want to change all found objects?" << std::endl;
         std::cout << "[1] Yes" << std::endl;
         std::cout << "[0] No" << std::endl;
 
@@ -195,7 +202,7 @@ inline void filterStationsByCountOfWorkingShops(std::unordered_map<int, Station>
         switch (choice) {
             case 1:
                 for (auto& [id, station] : stations) {
-                    if (station.getShopsInWork() == shops_in_work) {
+                    if (station.getChangeable() == shops_in_work) {
                         station.change();
                     }
                 }
@@ -261,7 +268,7 @@ void filterObjectsByName(std::unordered_map<int, T>& objects) {
 }
 
 template<typename T>
-void changeById(std::unordered_map<int, T>& objects) {
+void changeObjectById(std::unordered_map<int, T>& objects) {
     int id;
 
     getInfo(objects);

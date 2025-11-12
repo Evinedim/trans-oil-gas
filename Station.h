@@ -11,7 +11,7 @@ class Station {
 public:
     std::string getName() { return name; }
 
-    int getShopsInWork() { return shops_in_work; }
+    int getChangeable() { return shops_in_work; }
 
     void getInfo();
 
