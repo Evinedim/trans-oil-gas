@@ -94,7 +94,7 @@ int main() {
 
                         switch(pipe_choice) {
                             case 1: {                                
-                                filterObjectsByName(pipes);
+                                filterPipesByName(pipes);
                                 break;
                             }
                             case 2: {
@@ -102,11 +102,11 @@ int main() {
                                 break;
                             }
                             case 3: {
-                                changeAllObjects(pipes);
+                                changeAllPipes(pipes);
                                 break;
                             }
                             case 4: {
-                                deleteObjectById(pipes);
+                                changePipeById(pipes);
                                 break;
                             }
                             case 5: {
@@ -152,15 +152,15 @@ int main() {
 
                         switch(station_choice) {
                             case 1: {                                
-                                filterObjectsByName(stations);
+                                // filterObjectsByName(stations);
                                 break;
                             }
                             case 2: {
-                                filterStationsByCountOfWorkingShops(stations);
+                                // filterStationsByCountOfWorkingShops(stations);
                                 break;
                             }
                             case 3: {
-                                changeObjectById(stations);
+                                // changeObjectById(stations);
                                 break;
                             }
                             case 4: {

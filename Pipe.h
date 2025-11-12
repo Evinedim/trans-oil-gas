@@ -11,13 +11,13 @@ class Pipe {
 public:
     std::string getName() { return name; }
 
-    int getChangeable() { return status; }
+    int getStatus() { return status; }
 
     void getInfo();
 
     void readFromConsole();
 
-    void change();
+    void changeStatus();
 
     void saveToFile(std::ofstream& file);
     void loadFromFile(std::ifstream& file);

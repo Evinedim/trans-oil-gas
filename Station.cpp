@@ -44,7 +44,7 @@ void Station::readFromConsole() {
     }
 }
 
-void Station::change() {
+void Station::changeShopsInWorkCount() {
     getInfo();
     if (name != "Undefined" || shops_count != 0 || shops_in_work != 0 || station_class != 0) {
         while (true) {

@@ -11,13 +11,13 @@ class Station {
 public:
     std::string getName() { return name; }
 
-    int getChangeable() { return shops_in_work; }
+    int getShopsInWorkCount() { return shops_in_work; }
 
     void getInfo();
 
     void readFromConsole();
 
-    void change();
+    void changeShopsInWorkCount();
 
     void saveToFile(std::ofstream& file);
     void loadFromFile(std::ifstream& file);

@@ -40,7 +40,7 @@ void Pipe::readFromConsole() {
     }
 }
 
-void Pipe::change() {
+void Pipe::changeStatus() {
     if (name != "Undefined" || length != 0.0 || diameter != 0) {
         status = !status;
         std::cout << std::endl << "Pipe status has been changed!" << std::endl;
