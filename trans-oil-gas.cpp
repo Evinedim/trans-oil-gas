@@ -112,6 +112,7 @@ int main() {
                             }
                             case 5: {
                                 deleteObjectById(pipes);
+                                break;
                             }
                             case 6: {
                                 pipes.clear();

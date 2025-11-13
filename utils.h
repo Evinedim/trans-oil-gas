@@ -3,7 +3,9 @@
 #include "Station.h"
 #include <unordered_map>
 #include <map>
-#include <vector>
+#include <unordered_set>
+#include <sstream>
+#include <algorithm>
 #include <fstream>
 #include <functional>
 
@@ -88,7 +90,7 @@ inline void saveObjectsFrom(std::unordered_map<int, Pipe>& pipes,
 
 template<typename T>
 int generateID(std::unordered_map<int, T> &objects) {
-    static int id = 0;
+    static int id = 1;
     while (objects.count(id) != 0) {
         id++;
     }
@@ -121,14 +123,14 @@ void deleteObjectById(std::unordered_map<int, T>& objects) {
 }
 
 template<typename T>
-std::vector<int> getFilteredIds(std::unordered_map<int, T>& objects, std::function<bool(T&)> predicate) {
+std::unordered_set<int> getFilteredIds(std::unordered_map<int, T>& objects, std::function<bool(T&)> predicate) {
     
-    std::vector<int> ids = {};
+    std::unordered_set<int> ids = {};
     for (auto& [id, object] : objects) {
         if (predicate(object)) {
             std::cout << std::endl << id;
             object.getInfo();
-            ids.push_back(id);
+            ids.insert(id);
         }
     }
 
@@ -158,12 +160,30 @@ void changeAllObjects(std::unordered_map<int, T>& objects) {
     }
 }
 
-inline void changeAllFoundPipes(std::unordered_map<int, Pipe>& pipes, std::vector<int> ids) {
+inline std::unordered_set<int> getNumberSeparatedBySpace() {
+    
+    std::unordered_set<int> numbers;
+    std::string line;
+    int number;
+
+    INPUT_LINE(std::cin >> std::ws, line);
+
+    std::stringstream stream(line);
+
+    while (stream >> number) {
+        numbers.insert(number);
+    }
+    
+    return numbers;
+}
+
+inline void changeAllFoundPipes(std::unordered_map<int, Pipe>& pipes, std::unordered_set<int> ids) {
 
     int choice;
 
-    std::cout << std::endl << "Do you want to change all found pipes?" << std::endl;
-    std::cout << "[1] Yes" << std::endl;
+    std::cout << std::endl << "Do you want to change found pipes?" << std::endl;
+    std::cout << "[1] Yes (All)" << std::endl;
+    std::cout << "[2] Yes (Certain)" << std::endl;
     std::cout << "[0] No" << std::endl;
     std::cout << "Your choice: ";
 
@@ -172,6 +192,15 @@ inline void changeAllFoundPipes(std::unordered_map<int, Pipe>& pipes, std::vecto
             for (auto& id : ids) {
                 std::cout << std::endl << "[" << id << "]";
                 pipes[id].changeStatus();
+            }
+        }
+        if (choice == 2) {
+            std::cout << "Enter ids separeted by space: ";
+            std::unordered_set<int> subset_ids = getNumberSeparatedBySpace();
+            for (auto& id : subset_ids) {
+                if (ids.contains(id)) {
+                    pipes[id].changeStatus();
+                }
             }
         }
         if (choice == 0) {
@@ -191,7 +220,7 @@ inline void filterPipesByName(std::unordered_map<int, Pipe>& pipes) {
 
     std::function<bool(Pipe&)> predicate = [&name](Pipe pipe) { return name == pipe.getName(); };
 
-    std::vector<int> ids = getFilteredIds(pipes, predicate);
+    std::unordered_set<int> ids = getFilteredIds(pipes, predicate);
 
     if (ids.empty()) {
         std::cout << std::endl << "Nothing was found!" << std::endl;
@@ -210,7 +239,7 @@ inline void filterPipesByStatus(std::unordered_map<int, Pipe>& pipes) {
     }
 
     std::function<bool(Pipe&)> predicate = [&status](Pipe pipe) { return status == pipe.getStatus(); };
-    std::vector<int> ids = getFilteredIds(pipes, predicate);
+    std::unordered_set<int> ids = getFilteredIds(pipes, predicate);
 
     if (ids.empty()) {
         std::cout << std::endl << "Nothing was found!" << std::endl;
@@ -232,7 +261,7 @@ inline void changeStationsById(std::unordered_map<int, Station>& stations) {
     }
 }
 
-inline void changeAllFoundStations(std::unordered_map<int, Station>& stations, std::vector<int> ids) {
+inline void changeAllFoundStations(std::unordered_map<int, Station>& stations, std::unordered_set<int> ids) {
 
     int choice;
 
@@ -265,7 +294,7 @@ inline void filterStationsByName(std::unordered_map<int, Station>& stations) {
 
     std::function<bool(Station&)> predicate = [&name](Station station) { return name == station.getName(); };
 
-    std::vector<int> ids = getFilteredIds(stations, predicate);
+    std::unordered_set<int> ids = getFilteredIds(stations, predicate);
 
     if (ids.empty()) {
         std::cout << std::endl << "Nothing was found!" << std::endl;
@@ -284,7 +313,7 @@ inline void filterStationsByShopsInWorkCount(std::unordered_map<int, Station>& s
     }
 
     std::function<bool(Station&)> predicate = [&shops_in_work](Station station) { return shops_in_work == station.getShopsInWorkCount(); };
-    std::vector<int> ids = getFilteredIds(stations, predicate);
+    std::unordered_set<int> ids = getFilteredIds(stations, predicate);
 
     if (ids.empty()) {
         std::cout << std::endl << "Nothing was found!" << std::endl;
