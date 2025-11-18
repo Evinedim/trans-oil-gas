@@ -198,7 +198,7 @@ inline void changeAllFoundPipes(std::unordered_map<int, Pipe>& pipes, std::unord
             std::cout << "Enter ids separeted by space: ";
             std::unordered_set<int> subset_ids = getNumberSeparatedBySpace();
             for (auto& id : subset_ids) {
-                if (ids.contains(id)) {
+                if (ids.count(id) != 0) {
                     pipes[id].changeStatus();
                 }
             }

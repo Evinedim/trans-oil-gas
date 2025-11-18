@@ -15,7 +15,9 @@ int main() {
 	std::string time = std::format("{:%d_%m_%Y %H_%M_%OS}", utc3);
 
 	std::ofstream logfile("logfiles/log " + time + ".txt");
-	if (logfile) { cerr_out.redirect(logfile); }
+	if (logfile) { 
+        cerr_out.redirect(logfile); 
+    }
 
     std::unordered_map<int, Pipe> pipes = {};
     std::unordered_map<int, Station> stations = {};
@@ -31,14 +33,15 @@ int main() {
         std::cout << "[3] Show all objects" << std::endl;
         std::cout << "[4] Pipes manager" << std::endl;
         std::cout << "[5] Compressor stations manager" << std::endl;
-        std::cout << "[6] Save to file" << std::endl;
-        std::cout << "[7] Load from file" << std::endl;
+        std::cout << "[6] Transportation network manager" << std::endl;
+        std::cout << "[7] Save to file" << std::endl;
+        std::cout << "[8] Load from file" << std::endl;
         std::cout << "[0] Exit" << std::endl;
         std::cout << "-----------------------------------" << std::endl;
 
         while (true) {
             std::cout << "Choose the option: ";
-            if (validation(choice) && choice >= 0 && choice <= 7) {
+            if (validation(choice) && choice >= 0 && choice <= 8) {
                 break;
             }
             std::cout << std::endl << "[Error] Invalid choice! Try again!" << std::endl;
@@ -193,10 +196,13 @@ int main() {
                 }
                 break;
             case 6: {
-                saveObjectsFrom(pipes, stations);
                 break;
             }
             case 7: {
+                saveObjectsFrom(pipes, stations);
+                break;
+            }
+            case 8: {
                 loadFromFileTo(pipes, stations);
                 break;
             }
