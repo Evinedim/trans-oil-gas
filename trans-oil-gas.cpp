@@ -230,6 +230,7 @@ int main() {
                                 break;
                             }
                             case 3: {
+                                network.showTopologicalSortedNetwork();
                                 break;
                             }
                             case 0:

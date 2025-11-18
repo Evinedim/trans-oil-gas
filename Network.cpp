@@ -83,14 +83,34 @@ void Network::createConnection() {
         graph[start_cs].pop_back();
         std::cout << std::endl << "Such connection forms cicle! Try again!" << std::endl;
     }
+
+    for (auto& [start_cs, pair]: graph) {
+        if (pair.empty()) {
+            graph.erase(start_cs);
+        }
+    }
 }
 
 void Network::showNetwork() {
-    for (auto& [start_cs, pair]: graph) {
-        std::cout << "" << start_cs << ": ";
-        for (auto& [end_cs, pipe_id] : pair) {
-            std::cout << "(" << end_cs << ", " << pipe_id << ") ";
+    if (graph.empty()) {
+        std::cout << std::endl << "Network is empty!" << std::endl;
+    } else {
+        for (auto& [start_cs, pair]: graph) {
+            std::cout << "" << start_cs << ": ";
+            for (auto& [end_cs, pipe_id] : pair) {
+                std::cout << "(" << end_cs << ", " << pipe_id << ") ";
+            }  
+            std::cout << std::endl; 
         }  
+    }
+}
+
+void Network::showTopologicalSortedNetwork() {
+    for (auto& start_cs : getTopologicalSortedNodes()) {
+        std::cout << start_cs << ": ";
+        for (auto& [end_cs, pipe_id] : graph[start_cs]) {
+            std::cout << "(" << end_cs << ", " << pipe_id << ") ";
+        }
         std::cout << std::endl; 
     }  
 }
