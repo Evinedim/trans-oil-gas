@@ -1,6 +1,6 @@
 #include "Network.h"
+#include "utils.h"
 #include <queue>
-
 
 std::vector<int> Network::getTopologicalSortedNodes() {
 
@@ -36,5 +36,61 @@ std::vector<int> Network::getTopologicalSortedNodes() {
             }
         }
 
+        if (result.size() != in_degrees.size()) {
+            result.clear();
+        }
+        
         return result;
+}
+
+void Network::createConnection() {
+    int start_cs, end_cs, pipe_id;
+
+    getInfo(stations);
+
+    while (true) {
+        std::cout << "Choose id of start station: ";
+        if (validation(start_cs) && stations.count(start_cs) != 0) {
+            break;
+        } else {
+            std::cout << std::endl << "[Error] Invalid choice! Try again!" << std::endl;
+        }
+    }
+
+    while (true) {
+        std::cout << "Choose id of end station: ";
+        if (validation(end_cs) && stations.count(end_cs) != 0) {
+            break;
+        } else {
+            std::cout << std::endl << "[Error] Invalid choice! Try again!" << std::endl;
+        }
+    }
+
+    getInfo(pipes);
+
+    while (true) {
+        std::cout << "Choose id of connection pipe: ";
+        if (validation(pipe_id) && pipes.count(pipe_id) != 0) {
+            break;
+        } else {
+            std::cout << std::endl << "[Error] Invalid choice! Try again!" << std::endl;
+        }
+    }
+
+    graph[start_cs].push_back({end_cs, pipe_id});
+
+    if (getTopologicalSortedNodes().empty()) {
+        graph[start_cs].pop_back();
+        std::cout << std::endl << "Such connection forms cicle! Try again!" << std::endl;
+    }
+}
+
+void Network::showNetwork() {
+    for (auto& [start_cs, pair]: graph) {
+        std::cout << "" << start_cs << ": ";
+        for (auto& [end_cs, pipe_id] : pair) {
+            std::cout << "(" << end_cs << ", " << pipe_id << ") ";
+        }  
+        std::cout << std::endl; 
+    }  
 }

@@ -17,7 +17,7 @@ public:
 
     void showTopologicalSortedNetwork();
 
-    void addConnection();
+    void createConnection();
 
     Network(std::unordered_map<int, Pipe>& pipes, 
         std::unordered_map<int, Station>& stations) : pipes(pipes), stations(stations) {}

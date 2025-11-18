@@ -27,7 +27,7 @@ int main() {
 
     system("cls");
 
-    int choice, pipe_choice, station_choice;
+    int choice, pipe_choice, station_choice, network_choice;
 
     do {
         std::cout << std::endl;
@@ -200,6 +200,47 @@ int main() {
                 }
                 break;
             case 6: {
+                if (stations.empty() || stations.size() < 2 || pipes.size() < 1) {
+                    std::cout << std::endl << "Count of object is less than required to create a network!!!" << std::endl;
+                } else {
+                    do {
+                        std::cout << std::endl;
+                        std::cout << "--------------Network menu---------------" << std::endl;
+                        std::cout << "[1] Create connection" << std::endl;
+                        std::cout << "[2] Show network" << std::endl;
+                        std::cout << "[3] Show sorted network" << std::endl;
+                        std::cout << "[0] Exit" << std::endl;
+                        std::cout << "-----------------------------------------" << std::endl;
+
+                        while (true) {
+                            std::cout << "Choose the option: ";
+                            if (validation(network_choice) && network_choice >= 0 && network_choice <= 3) {
+                                break;
+                            }
+                            std::cout << std::endl << "[Error] Invalid choice! Try again!" << std::endl;
+                        }
+
+                        switch(network_choice) {
+                            case 1: {
+                                network.createConnection();
+                                break;
+                            }
+                            case 2: {
+                                network.showNetwork();
+                                break;
+                            }
+                            case 3: {
+                                break;
+                            }
+                            case 0:
+                                break;
+                        }
+
+                        if (network_choice != 0) {
+                            std::cout << std::endl << "Return to network menu!" << std::endl;
+                        }
+                    } while (network_choice != 0);
+                }
                 break;
             }
             case 7: {
