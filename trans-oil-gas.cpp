@@ -1,5 +1,6 @@
 #include "Pipe.h"
 #include "Station.h"
+#include "Network.h"
 #include "utils.h"
 #include <map>
 #include <chrono>
@@ -21,6 +22,9 @@ int main() {
 
     std::unordered_map<int, Pipe> pipes = {};
     std::unordered_map<int, Station> stations = {};
+
+    Network network = Network(pipes, stations);
+
     system("cls");
 
     int choice, pipe_choice, station_choice;
