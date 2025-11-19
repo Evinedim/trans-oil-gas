@@ -6,41 +6,83 @@ std::vector<int> Network::getTopologicalSortedNodes() {
 
     std::unordered_map<int, int> in_degrees;
 
-        for (auto& [node, neighbors] : graph) {
-            in_degrees[node];
-            for (auto& [neighbor, weight] : neighbors) {
-                in_degrees[neighbor]++;
+    for (auto& [node, neighbors] : graph) {
+        in_degrees[node];
+        for (auto& [neighbor, weight] : neighbors) {
+            in_degrees[neighbor]++;
+        }
+    }
+
+    std::queue<int> queue;
+
+    for (auto& [node, in_degree] : in_degrees) {
+        if (in_degree == 0) {
+            queue.push(node);
+        }
+    }
+
+    std::vector<int> result;
+
+    while (!queue.empty()) {
+        int node = queue.front();
+        queue.pop();
+        result.push_back(node);
+
+        for (auto& [neigbor, weight] : graph[node]) {
+            in_degrees[neigbor]--;
+            if (in_degrees[neigbor] == 0) {
+                queue.push(neigbor);
             }
         }
+    }
 
-        std::queue<int> queue;
+    if (result.size() != in_degrees.size()) {
+        result.clear();
+    }
+    
+    return result;
+}
 
-        for (auto& [node, in_degree] : in_degrees) {
-            if (in_degree == 0) {
-                queue.push(node);
-            }
+void Network::deleteZeroDegreeNodes() {
+    std::unordered_map<int, int> degrees;
+
+    for (auto& [node, neigbours] : graph) {
+        degrees[node] += neigbours.size();
+
+        for (auto& [neigbour, weight] : neigbours) {
+            degrees[neigbour]++;
         }
+    }
 
-        std::vector<int> result;
-
-        while (!queue.empty()) {
-            int node = queue.front();
-            queue.pop();
-            result.push_back(node);
-
-            for (auto& [neigbor, weight] : graph[node]) {
-                in_degrees[neigbor]--;
-                if (in_degrees[neigbor] == 0) {
-                    queue.push(neigbor);
-                }
-            }
+    for (auto& [node, degree] : degrees) {
+        if (degree == 0) {
+            graph.erase(node);
         }
+    }
+}
 
-        if (result.size() != in_degrees.size()) {
-            result.clear();
+void Network::showNetwork() {
+    if (graph.empty()) {
+        std::cout << std::endl << "Network is empty!" << std::endl;
+    } else {
+        for (auto& [start_cs, neighbors]: graph) {
+            std::cout << "" << start_cs << ": ";
+            for (auto& [end_cs, pipe_id] : neighbors) {
+                std::cout << "(" << end_cs << ", " << pipe_id << ") ";
+            }  
+            std::cout << std::endl; 
+        }  
+    }
+}
+
+void Network::showTopologicalSortedNetwork() {
+    for (auto& start_cs : getTopologicalSortedNodes()) {
+        std::cout << start_cs << ": ";
+        for (auto& [end_cs, pipe_id] : graph[start_cs]) {
+            std::cout << "(" << end_cs << ", " << pipe_id << ") ";
         }
-        
-        return result;
+        std::cout << std::endl; 
+    }  
 }
 
 void Network::createConnection() {
@@ -77,40 +119,40 @@ void Network::createConnection() {
         }
     }
 
-    graph[start_cs].push_back({end_cs, pipe_id});
+    graph[start_cs][end_cs] = pipe_id;
 
     if (getTopologicalSortedNodes().empty()) {
-        graph[start_cs].pop_back();
+        graph[start_cs].erase(end_cs);
         std::cout << std::endl << "Such connection forms cicle! Try again!" << std::endl;
     }
 
-    for (auto& [start_cs, pair]: graph) {
-        if (pair.empty()) {
-            graph.erase(start_cs);
-        }
-    }
+    deleteZeroDegreeNodes();
 }
 
-void Network::showNetwork() {
-    if (graph.empty()) {
-        std::cout << std::endl << "Network is empty!" << std::endl;
-    } else {
-        for (auto& [start_cs, pair]: graph) {
-            std::cout << "" << start_cs << ": ";
-            for (auto& [end_cs, pipe_id] : pair) {
-                std::cout << "(" << end_cs << ", " << pipe_id << ") ";
-            }  
-            std::cout << std::endl; 
-        }  
-    }
-}
+void Network::deleteConnection() {
+    int start_cs, end_cs;
 
-void Network::showTopologicalSortedNetwork() {
-    for (auto& start_cs : getTopologicalSortedNodes()) {
-        std::cout << start_cs << ": ";
-        for (auto& [end_cs, pipe_id] : graph[start_cs]) {
-            std::cout << "(" << end_cs << ", " << pipe_id << ") ";
+    showNetwork();
+
+    while (true) {
+        std::cout << "Choose id of start station: ";
+        if (validation(start_cs) && graph.count(start_cs) != 0) {
+            break;
+        } else {
+            std::cout << std::endl << "[Error] Invalid choice! Try again!" << std::endl;
         }
-        std::cout << std::endl; 
-    }  
+    }
+
+    while (true) {
+        std::cout << "Choose id of end station: ";
+        if (validation(end_cs) && graph.count(end_cs) != 0) {
+            break;
+        } else {
+            std::cout << std::endl << "[Error] Invalid choice! Try again!" << std::endl;
+        }
+    }
+
+    graph[start_cs].erase(end_cs);
+
+    deleteZeroDegreeNodes();
 }

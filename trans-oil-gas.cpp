@@ -207,14 +207,15 @@ int main() {
                         std::cout << std::endl;
                         std::cout << "--------------Network menu---------------" << std::endl;
                         std::cout << "[1] Create connection" << std::endl;
-                        std::cout << "[2] Show network" << std::endl;
-                        std::cout << "[3] Show sorted network" << std::endl;
+                        std::cout << "[2] Delete connection" << std::endl;
+                        std::cout << "[3] Show network" << std::endl;
+                        std::cout << "[4] Show sorted network" << std::endl;
                         std::cout << "[0] Exit" << std::endl;
                         std::cout << "-----------------------------------------" << std::endl;
 
                         while (true) {
                             std::cout << "Choose the option: ";
-                            if (validation(network_choice) && network_choice >= 0 && network_choice <= 3) {
+                            if (validation(network_choice) && network_choice >= 0 && network_choice <= 4) {
                                 break;
                             }
                             std::cout << std::endl << "[Error] Invalid choice! Try again!" << std::endl;
@@ -226,10 +227,14 @@ int main() {
                                 break;
                             }
                             case 2: {
-                                network.showNetwork();
+                                network.deleteConnection();
                                 break;
                             }
                             case 3: {
+                                network.showNetwork();
+                                break;
+                            }
+                            case 4: {
                                 network.showTopologicalSortedNetwork();
                                 break;
                             }
