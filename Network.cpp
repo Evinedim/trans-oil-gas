@@ -61,6 +61,14 @@ void Network::deleteZeroDegreeNodes() {
     }
 }
 
+void Network::clear() {
+    if (!graph.empty()) {
+        std::cout << std::endl << "One of the objects on which the network was based was changed!"; 
+        std::cout << std::endl << "To avoid problems, the network will be removed!" << std::endl;
+        graph.clear();
+    }
+}
+
 void Network::showNetwork() {
     if (graph.empty()) {
         std::cout << std::endl << "Network is empty!" << std::endl;
@@ -76,83 +84,107 @@ void Network::showNetwork() {
 }
 
 void Network::showTopologicalSortedNetwork() {
-    for (auto& start_cs : getTopologicalSortedNodes()) {
-        std::cout << start_cs << ": ";
-        for (auto& [end_cs, pipe_id] : graph[start_cs]) {
-            std::cout << "(" << end_cs << ", " << pipe_id << ") ";
-        }
-        std::cout << std::endl; 
-    }  
+    if (graph.empty()) {
+        std::cout << std::endl << "Network is empty!" << std::endl;
+    } else {
+        for (auto& start_cs : getTopologicalSortedNodes()) {
+            std::cout << start_cs << ": ";
+            for (auto& [end_cs, pipe_id] : graph[start_cs]) {
+                std::cout << "(" << end_cs << ", " << pipe_id << ") ";
+            }
+            std::cout << std::endl; 
+        } 
+    }
 }
 
 void Network::createConnection() {
-    int start_cs, end_cs, pipe_id;
+    if (pipes.size() == using_pipes.size()) {
+        std::cout << "Count of pipes is less than required to create a network!!!";
+    } else {
+        int start_cs, end_cs, pipe_id;
 
-    getInfo(stations);
+        getInfo(stations);
 
-    while (true) {
-        std::cout << "Choose id of start station: ";
-        if (validation(start_cs) && stations.count(start_cs) != 0) {
-            break;
-        } else {
-            std::cout << std::endl << "[Error] Invalid choice! Try again!" << std::endl;
+        while (true) {
+            std::cout << "Choose id of start station: ";
+            if (validation(start_cs) && stations.count(start_cs) != 0) {
+                break;
+            } else {
+                std::cout << std::endl << "[Error] Invalid choice! Try again!" << std::endl;
+            }
         }
-    }
 
-    while (true) {
-        std::cout << "Choose id of end station: ";
-        if (validation(end_cs) && stations.count(end_cs) != 0) {
-            break;
-        } else {
-            std::cout << std::endl << "[Error] Invalid choice! Try again!" << std::endl;
+        while (true) {
+            std::cout << "Choose id of end station: ";
+            if (validation(end_cs) && stations.count(end_cs) != 0) {
+                break;
+            } else {
+                std::cout << std::endl << "[Error] Invalid choice! Try again!" << std::endl;
+            }
         }
-    }
 
-    getInfo(pipes);
-
-    while (true) {
-        std::cout << "Choose id of connection pipe: ";
-        if (validation(pipe_id) && pipes.count(pipe_id) != 0) {
-            break;
-        } else {
-            std::cout << std::endl << "[Error] Invalid choice! Try again!" << std::endl;
+        for (auto& [id, pipe] : pipes) {
+            if (using_pipes.count(id) == 0) {
+                std::cout << std::endl << id;
+                pipe.getInfo();
+            }
         }
+
+        while (true) {
+            std::cout << "Choose id of connection pipe: ";
+            if (validation(pipe_id) && pipes.count(pipe_id) != 0 && using_pipes.count(pipe_id) == 0)  {
+                break;
+            } else {
+                std::cout << std::endl << "[Error] Invalid choice! Try again!" << std::endl;
+            }
+        }
+
+        graph[start_cs][end_cs] = pipe_id;
+
+        if (getTopologicalSortedNodes().empty()) {
+            graph[start_cs].erase(end_cs);
+            std::cout << std::endl << "Such connection forms cicle! Try again!" << std::endl;
+        } else {
+            using_pipes.insert(pipe_id);
+        }
+
+        deleteZeroDegreeNodes();
     }
-
-    graph[start_cs][end_cs] = pipe_id;
-
-    if (getTopologicalSortedNodes().empty()) {
-        graph[start_cs].erase(end_cs);
-        std::cout << std::endl << "Such connection forms cicle! Try again!" << std::endl;
-    }
-
-    deleteZeroDegreeNodes();
 }
 
 void Network::deleteConnection() {
-    int start_cs, end_cs;
+    if (graph.empty()) {
+        showNetwork();
+    } else {
+        int start_cs, end_cs;
 
-    showNetwork();
+        showNetwork();
 
-    while (true) {
-        std::cout << "Choose id of start station: ";
-        if (validation(start_cs) && graph.count(start_cs) != 0) {
-            break;
-        } else {
-            std::cout << std::endl << "[Error] Invalid choice! Try again!" << std::endl;
+        while (true) {
+            std::cout << "Choose id of start station: ";
+            if (validation(start_cs) && graph.count(start_cs) != 0) {
+                break;
+            } else {
+                std::cout << std::endl << "[Error] Invalid choice! Try again!" << std::endl;
+            }
         }
-    }
 
-    while (true) {
-        std::cout << "Choose id of end station: ";
-        if (validation(end_cs) && graph.count(end_cs) != 0) {
-            break;
-        } else {
-            std::cout << std::endl << "[Error] Invalid choice! Try again!" << std::endl;
+        while (true) {
+            std::cout << "Choose id of end station: ";
+            if (validation(end_cs) && graph.count(end_cs) != 0) {
+                break;
+            } else {
+                std::cout << std::endl << "[Error] Invalid choice! Try again!" << std::endl;
+            }
         }
+
+        if (graph.count(start_cs)) {
+            if (graph[start_cs].count(end_cs)) {
+                using_pipes.erase(graph[start_cs][end_cs]);
+                graph[start_cs].erase(end_cs);
+            }
+        }
+
+        deleteZeroDegreeNodes();
     }
-
-    graph[start_cs].erase(end_cs);
-
-    deleteZeroDegreeNodes();
 }

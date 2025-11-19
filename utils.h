@@ -150,13 +150,12 @@ inline void changePipeById(std::unordered_map<int, Pipe>& pipes) {
     }
 }
 
-template<typename T>
-void changeAllObjects(std::unordered_map<int, T>& objects) {
+void changeAllPipes(std::unordered_map<int, Pipe>& pipes) {
 
-    getInfo(objects);
-    for (auto& [id, object] : objects) {
+    getInfo(pipes);
+    for (auto& [id, pipe] : pipes) {
         std::cout << std::endl << "[" << id << "]" << std::endl;
-        objects[id].changeStatus();
+        pipes[id].changeStatus();
     }
 }
 

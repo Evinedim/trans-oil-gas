@@ -114,15 +114,19 @@ int main() {
                                 break;
                             }
                             case 4: {
-                                changeAllObjects(pipes);
+                                changeAllPipes(pipes);
                                 break;
                             }
                             case 5: {
+                                int size_before = pipes.size();
                                 deleteObjectById(pipes);
+                                int size_after = pipes.size();
+                                if (size_after != size_before) { network.clear(); }
                                 break;
                             }
                             case 6: {
                                 pipes.clear();
+                                network.clear();
                                 std::cout << std::endl << "All pipes was deleted!" << std::endl;
                                 break;
                             }
@@ -149,15 +153,14 @@ int main() {
                         std::cout << "[1] Filter stations by name" << std::endl;
                         std::cout << "[2] Filter stations by count of shops in work" << std::endl;
                         std::cout << "[3] Change count of shops in work of certain station" << std::endl;
-                        std::cout << "[4] Change count of shops in work of all stations" << std::endl;
-                        std::cout << "[5] Delete certain station" << std::endl;
-                        std::cout << "[6] Delete all stations" << std::endl;
+                        std::cout << "[4] Delete certain station" << std::endl;
+                        std::cout << "[5] Delete all stations" << std::endl;
                         std::cout << "[0] Exit" << std::endl;
                         std::cout << "------------------------------------------------------" << std::endl;
 
                         while (true) {
                             std::cout << "Choose the option: ";
-                            if (validation(station_choice) && station_choice >= 0 && station_choice <= 6) {
+                            if (validation(station_choice) && station_choice >= 0 && station_choice <= 5) {
                                 break;
                             }
                             std::cout << std::endl << "[Error] Invalid choice! Try again!" << std::endl;
@@ -177,15 +180,15 @@ int main() {
                                 break;
                             }
                             case 4: {
+                                int size_before = stations.size();
                                 deleteObjectById(stations);
+                                int size_after = stations.size();
+                                if (size_after != size_before) { network.clear(); }
                                 break;
                             }
                             case 5: {
-                                deleteObjectById(stations);
-                                break;
-                            }
-                            case 6: {
                                 stations.clear();
+                                network.clear();
                                 std::cout << std::endl << "All stations was deleted!" << std::endl;
                                 break;
                             }
