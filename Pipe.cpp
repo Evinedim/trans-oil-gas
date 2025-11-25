@@ -55,13 +55,15 @@ void Pipe::saveToFile(std::ofstream& file) {
         file << length << std::endl;
         file << diameter << std::endl;
         file << status << std::endl;
+        file << cs_in << std::endl;
+        file << cs_out << std::endl;
         std::cout << "Pipe was successfully saved!" << std::endl;
     }
 }
 
 void Pipe::loadFromFile(std::ifstream& file) {
     std::getline(file >> std::ws, name);
-    if (file >> length >> diameter >> status) {
+    if (file >> length >> diameter >> status >> cs_in >> cs_out) {
         std::cout << "Pipe was successfully loaded!" << std::endl;
     } else {
         std::cout << std::endl << "[Error] Wrong data in file!" << std::endl;

@@ -118,16 +118,13 @@ int main() {
                                 break;
                             }
                             case 5: {
-                                int size_before = pipes.size();
                                 deleteObjectById(pipes);
-                                int size_after = pipes.size();
-                                if (size_after != size_before) { network.clear(); }
+                                network.initializeNetwork();
                                 break;
                             }
                             case 6: {
                                 pipes.clear();
-                                network.clear();
-                                std::cout << std::endl << "All pipes was deleted!" << std::endl;
+                                network.initializeNetwork();
                                 break;
                             }
                             case 0:
@@ -180,16 +177,13 @@ int main() {
                                 break;
                             }
                             case 4: {
-                                int size_before = stations.size();
                                 deleteObjectById(stations);
-                                int size_after = stations.size();
-                                if (size_after != size_before) { network.clear(); }
+                                network.initializeNetwork();
                                 break;
                             }
                             case 5: {
                                 stations.clear();
-                                network.clear();
-                                std::cout << std::endl << "All stations was deleted!" << std::endl;
+                                network.initializeNetwork();
                                 break;
                             }
                             case 0:
@@ -203,53 +197,49 @@ int main() {
                 }
                 break;
             case 6: {
-                if (stations.empty() || stations.size() < 2 || pipes.size() < 1) {
-                    std::cout << std::endl << "Count of object is less than required to create a network!!!" << std::endl;
-                } else {
-                    do {
-                        std::cout << std::endl;
-                        std::cout << "--------------Network menu---------------" << std::endl;
-                        std::cout << "[1] Create connection" << std::endl;
-                        std::cout << "[2] Delete connection" << std::endl;
-                        std::cout << "[3] Show network" << std::endl;
-                        std::cout << "[4] Show sorted network" << std::endl;
-                        std::cout << "[0] Exit" << std::endl;
-                        std::cout << "-----------------------------------------" << std::endl;
+                do {
+                    std::cout << std::endl;
+                    std::cout << "--------------Network menu---------------" << std::endl;
+                    std::cout << "[1] Create connection" << std::endl;
+                    std::cout << "[2] Delete connection" << std::endl;
+                    std::cout << "[3] Show network" << std::endl;
+                    std::cout << "[4] Show sorted network" << std::endl;
+                    std::cout << "[0] Exit" << std::endl;
+                    std::cout << "-----------------------------------------" << std::endl;
 
-                        while (true) {
-                            std::cout << "Choose the option: ";
-                            if (validation(network_choice) && network_choice >= 0 && network_choice <= 4) {
-                                break;
-                            }
-                            std::cout << std::endl << "[Error] Invalid choice! Try again!" << std::endl;
+                    while (true) {
+                        std::cout << "Choose the option: ";
+                        if (validation(network_choice) && network_choice >= 0 && network_choice <= 4) {
+                            break;
                         }
+                        std::cout << std::endl << "[Error] Invalid choice! Try again!" << std::endl;
+                    }
 
-                        switch(network_choice) {
-                            case 1: {
-                                network.createConnection();
-                                break;
-                            }
-                            case 2: {
-                                network.deleteConnection();
-                                break;
-                            }
-                            case 3: {
-                                network.showNetwork();
-                                break;
-                            }
-                            case 4: {
-                                network.showTopologicalSortedNetwork();
-                                break;
-                            }
-                            case 0:
-                                break;
+                    switch(network_choice) {
+                        case 1: {
+                            network.createConnection();
+                            break;
                         }
+                        case 2: {
+                            network.deleteConnection();
+                            break;
+                        }
+                        case 3: {
+                            network.showNetwork();
+                            break;
+                        }
+                        case 4: {
+                            network.showTopologicalSortedNetwork();
+                            break;
+                        }
+                        case 0:
+                            break;
+                    }
 
-                        if (network_choice != 0) {
-                            std::cout << std::endl << "Return to network menu!" << std::endl;
-                        }
-                    } while (network_choice != 0);
-                }
+                    if (network_choice != 0) {
+                        std::cout << std::endl << "Return to network menu!" << std::endl;
+                    }
+                } while (network_choice != 0);
                 break;
             }
             case 7: {
@@ -258,6 +248,7 @@ int main() {
             }
             case 8: {
                 loadFromFileTo(pipes, stations);
+                network.initializeNetwork();
                 break;
             }
             case 0:

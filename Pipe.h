@@ -9,6 +9,9 @@ class Pipe {
     bool status;
 
 public:
+    int cs_in;
+    int cs_out;
+
     std::string getName() { return name; }
 
     int getStatus() { return status; }

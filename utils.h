@@ -150,7 +150,7 @@ inline void changePipeById(std::unordered_map<int, Pipe>& pipes) {
     }
 }
 
-void changeAllPipes(std::unordered_map<int, Pipe>& pipes) {
+inline void changeAllPipes(std::unordered_map<int, Pipe>& pipes) {
 
     getInfo(pipes);
     for (auto& [id, pipe] : pipes) {

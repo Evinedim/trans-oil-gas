@@ -61,11 +61,22 @@ void Network::deleteZeroDegreeNodes() {
     }
 }
 
-void Network::clear() {
-    if (!graph.empty()) {
-        std::cout << std::endl << "One of the objects on which the network was based was changed!"; 
-        std::cout << std::endl << "To avoid problems, the network will be removed!" << std::endl;
-        graph.clear();
+void Network::initializeNetwork() {
+    graph.clear();
+    for (auto& [id, pipe] : pipes) {
+        if (pipe.cs_in != 0 && pipe.cs_out != 0) {
+            if (pipe.cs_in != pipe.cs_out && stations.contains(pipe.cs_in) && stations.contains(pipe.cs_out)) {
+                graph[pipe.cs_out];
+                graph[pipe.cs_in][pipe.cs_out] = id;
+                using_pipes.insert(id);
+            } else {
+                std::cout << std::endl << "Pipe [" << id << "] will be disabled from network!!!" << std::endl;
+                std::cout << "Pipe [" << id << "] has an incorrect input or output compressor station ID!!!" << std::endl;
+
+                pipe.cs_in = 0;
+                pipe.cs_out = 0;
+            }
+        }
     }
 }
 
@@ -86,6 +97,8 @@ void Network::showNetwork() {
 void Network::showTopologicalSortedNetwork() {
     if (graph.empty()) {
         std::cout << std::endl << "Network is empty!" << std::endl;
+    } else if (getTopologicalSortedNodes().empty()) {
+        std::cout << std::endl << "Topological sorting is impossible! Graph contains cycles!" << std::endl;
     } else {
         for (auto& start_cs : getTopologicalSortedNodes()) {
             std::cout << start_cs << ": ";
@@ -107,7 +120,7 @@ void Network::createConnection() {
 
         while (true) {
             std::cout << "Choose id of start station: ";
-            if (validation(start_cs) && stations.count(start_cs) != 0) {
+            if (validation(start_cs) && stations.contains(start_cs)) {
                 break;
             } else {
                 std::cout << std::endl << "[Error] Invalid choice! Try again!" << std::endl;
@@ -116,7 +129,7 @@ void Network::createConnection() {
 
         while (true) {
             std::cout << "Choose id of end station: ";
-            if (validation(end_cs) && stations.count(end_cs) != 0) {
+            if (validation(end_cs) && stations.contains(end_cs) && end_cs != start_cs) {
                 break;
             } else {
                 std::cout << std::endl << "[Error] Invalid choice! Try again!" << std::endl;
@@ -124,7 +137,7 @@ void Network::createConnection() {
         }
 
         for (auto& [id, pipe] : pipes) {
-            if (using_pipes.count(id) == 0) {
+            if (!using_pipes.contains(id)) {
                 std::cout << std::endl << id;
                 pipe.getInfo();
             }
@@ -132,37 +145,31 @@ void Network::createConnection() {
 
         while (true) {
             std::cout << "Choose id of connection pipe: ";
-            if (validation(pipe_id) && pipes.count(pipe_id) != 0 && using_pipes.count(pipe_id) == 0)  {
+            if (validation(pipe_id) && pipes.contains(pipe_id) && !using_pipes.contains(pipe_id))  {
                 break;
             } else {
                 std::cout << std::endl << "[Error] Invalid choice! Try again!" << std::endl;
             }
         }
 
+        graph[end_cs];
         graph[start_cs][end_cs] = pipe_id;
+        using_pipes.insert(pipe_id);
 
-        if (getTopologicalSortedNodes().empty()) {
-            graph[start_cs].erase(end_cs);
-            std::cout << std::endl << "Such connection forms cicle! Try again!" << std::endl;
-        } else {
-            using_pipes.insert(pipe_id);
-        }
-
-        deleteZeroDegreeNodes();
+        pipes[pipe_id].cs_in = start_cs;
+        pipes[pipe_id].cs_out = end_cs;
     }
 }
 
 void Network::deleteConnection() {
-    if (graph.empty()) {
-        showNetwork();
-    } else {
-        int start_cs, end_cs;
+    showNetwork();
 
-        showNetwork();
+    if (!graph.empty()) {
+        int start_cs, end_cs;
 
         while (true) {
             std::cout << "Choose id of start station: ";
-            if (validation(start_cs) && graph.count(start_cs) != 0) {
+            if (validation(start_cs) && graph.contains(start_cs)) {
                 break;
             } else {
                 std::cout << std::endl << "[Error] Invalid choice! Try again!" << std::endl;
@@ -171,15 +178,18 @@ void Network::deleteConnection() {
 
         while (true) {
             std::cout << "Choose id of end station: ";
-            if (validation(end_cs) && graph.count(end_cs) != 0) {
+            if (validation(end_cs) && graph.contains(end_cs)) {
                 break;
             } else {
                 std::cout << std::endl << "[Error] Invalid choice! Try again!" << std::endl;
             }
         }
 
-        if (graph.count(start_cs)) {
-            if (graph[start_cs].count(end_cs)) {
+        if (graph.contains(start_cs)) {
+            if (graph[start_cs].contains(end_cs)) {
+                pipes[graph[start_cs][end_cs]].cs_in = 0;
+                pipes[graph[start_cs][end_cs]].cs_out = 0;
+
                 using_pipes.erase(graph[start_cs][end_cs]);
                 graph[start_cs].erase(end_cs);
             }

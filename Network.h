@@ -17,7 +17,7 @@ class Network {
     void deleteZeroDegreeNodes();
 
 public:
-    void clear();
+    void initializeNetwork();
 
     void showNetwork();
 
