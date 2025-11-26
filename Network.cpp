@@ -1,6 +1,7 @@
 #include "Network.h"
 #include "utils.h"
 #include <queue>
+#include <limits>
 
 std::vector<int> Network::getTopologicalSortedNodes() {
 
@@ -43,6 +44,60 @@ std::vector<int> Network::getTopologicalSortedNodes() {
     return result;
 }
 
+std::pair<std::vector<int>, double> Network::getShortestWay(int start, int end) {
+    std::unordered_map<int, double> costs;
+    std::unordered_map<int, int> parents;
+
+    std::unordered_set<int> processed;
+
+    for (auto& [node, neighbors] : graph) {
+        costs[node] = std::numeric_limits<double>::max();
+    }
+    costs[start] = 0;
+
+    std::function<double()> find_lowest_code_node = [&costs, &processed]() {
+        double lowest_cost = std::numeric_limits<double>::max();
+        double lowest_cost_node = -1;
+        for (auto& [node, cost] : costs) {
+            if (cost < lowest_cost && processed.count(node) == 0) {
+                lowest_cost = cost;
+                lowest_cost_node = node;
+            }
+        }
+        return lowest_cost_node;
+    };
+
+    double current_node = find_lowest_code_node();
+    while (current_node != -1) {
+        double cost = costs[current_node];
+        std::unordered_map<int, double> neighbors = graph[current_node];
+        for (auto& [neighbor, weight] : neighbors) {
+            double new_cost = cost + weight;
+            if (costs[neighbor] > new_cost) {
+                costs[neighbor] = new_cost;
+                parents[neighbor] = current_node;
+            }
+        }
+        processed.insert(current_node);
+        current_node = find_lowest_code_node();
+    }
+
+    if (costs[end] == std::numeric_limits<double>::max()) {
+        return {{}, -1};
+    }
+
+    std::vector<int> way;
+    int node = end;
+    while (node != start) {
+        way.push_back(node);
+        node = parents[node];
+    }
+    way.push_back(start);
+    std::reverse(way.begin(), way.end());
+    
+    return {way, costs[end]};
+}
+
 void Network::deleteZeroDegreeNodes() {
     std::unordered_map<int, int> degrees;
 
@@ -77,36 +132,6 @@ void Network::initializeNetwork() {
                 pipe.cs_out = 0;
             }
         }
-    }
-}
-
-void Network::showNetwork() {
-    if (graph.empty()) {
-        std::cout << std::endl << "Network is empty!" << std::endl;
-    } else {
-        for (auto& [start_cs, neighbors]: graph) {
-            std::cout << "" << start_cs << ": ";
-            for (auto& [end_cs, pipe_id] : neighbors) {
-                std::cout << "(" << end_cs << ", " << pipe_id << ") ";
-            }  
-            std::cout << std::endl; 
-        }  
-    }
-}
-
-void Network::showTopologicalSortedNetwork() {
-    if (graph.empty()) {
-        std::cout << std::endl << "Network is empty!" << std::endl;
-    } else if (getTopologicalSortedNodes().empty()) {
-        std::cout << std::endl << "Topological sorting is impossible! Graph contains cycles!" << std::endl;
-    } else {
-        for (auto& start_cs : getTopologicalSortedNodes()) {
-            std::cout << start_cs << ": ";
-            for (auto& [end_cs, pipe_id] : graph[start_cs]) {
-                std::cout << "(" << end_cs << ", " << pipe_id << ") ";
-            }
-            std::cout << std::endl; 
-        } 
     }
 }
 
@@ -199,4 +224,75 @@ void Network::deleteConnection() {
 
         deleteZeroDegreeNodes();
     }
+}
+
+void Network::showNetwork() {
+    if (graph.empty()) {
+        std::cout << std::endl << "Network is empty!" << std::endl;
+    } else {
+        std::cout << std::endl;
+        for (auto& [start_cs, neighbors]: graph) {
+            std::cout << "" << start_cs << ": ";
+            for (auto& [end_cs, pipe_id] : neighbors) {
+                std::cout << "(" << end_cs << ", " << pipe_id << ") ";
+            }  
+            std::cout << std::endl; 
+        }
+        std::cout << std::endl;
+    }
+}
+
+void Network::showTopologicalSortedNetwork() {
+    if (graph.empty()) {
+        std::cout << std::endl << "Network is empty!" << std::endl;
+    } else if (getTopologicalSortedNodes().empty()) {
+        std::cout << std::endl << "Topological sorting is impossible! Graph contains cycles!" << std::endl;
+    } else {
+        for (auto& start_cs : getTopologicalSortedNodes()) {
+            std::cout << start_cs << ": ";
+            for (auto& [end_cs, pipe_id] : graph[start_cs]) {
+                std::cout << "(" << end_cs << ", " << pipe_id << ") ";
+            }
+            std::cout << std::endl; 
+        } 
+    }
+}
+
+void Network::findShortestWay() {
+    showNetwork();
+
+    if (!graph.empty()) {
+        int start_cs, end_cs;
+
+        while (true) {
+            std::cout << "Choose id of start station: ";
+            if (validation(start_cs) && graph.contains(start_cs)) {
+                break;
+            } else {
+                std::cout << std::endl << "[Error] Invalid choice! Try again!" << std::endl;
+            }
+        }
+
+        while (true) {
+            std::cout << "Choose id of end station: ";
+            if (validation(end_cs) && graph.contains(end_cs)) {
+                break;
+            } else {
+                std::cout << std::endl << "[Error] Invalid choice! Try again!" << std::endl;
+            }
+        }
+
+        auto [way, length] = getShortestWay(start_cs, end_cs);
+
+        if (length == -1) {
+            std::cout << std::endl << "There is no way between these stations on the network!!!" << std::endl;
+        } else {
+            std::cout << std::endl;
+            for (int i = 0; i < way.size(); i++) {
+                std::cout << "Station " << i + 1 << " id: " << way[i] << std::endl;
+            }
+            std::cout << std::endl << "Total length: " << length << std::endl;
+        }
+    }
+        
 }
