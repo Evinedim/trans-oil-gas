@@ -7,7 +7,7 @@
 #include "Station.h"
 
 class Network {
-    std::unordered_map<int, std::unordered_map<int, int>> graph;
+    std::unordered_map<int, std::unordered_map<int, double>> graph;
     std::unordered_map<int, Pipe>& pipes;
     std::unordered_map<int, Station>& stations;
     std::unordered_set<int> using_pipes;

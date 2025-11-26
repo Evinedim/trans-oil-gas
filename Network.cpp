@@ -67,7 +67,7 @@ void Network::initializeNetwork() {
         if (pipe.cs_in != 0 && pipe.cs_out != 0) {
             if (pipe.cs_in != pipe.cs_out && stations.contains(pipe.cs_in) && stations.contains(pipe.cs_out)) {
                 graph[pipe.cs_out];
-                graph[pipe.cs_in][pipe.cs_out] = id;
+                graph[pipe.cs_in][pipe.cs_out] = pipe.getLength();
                 using_pipes.insert(id);
             } else {
                 std::cout << std::endl << "Pipe [" << id << "] will be disabled from network!!!" << std::endl;
@@ -113,6 +113,8 @@ void Network::showTopologicalSortedNetwork() {
 void Network::createConnection() {
     if (pipes.size() == using_pipes.size()) {
         std::cout << "Count of pipes is less than required to create a network!!!";
+    } else if (stations.size() < 2) {
+        std::cout << "Count of stations is less than required to create a network!!!";
     } else {
         int start_cs, end_cs, pipe_id;
 
@@ -153,7 +155,7 @@ void Network::createConnection() {
         }
 
         graph[end_cs];
-        graph[start_cs][end_cs] = pipe_id;
+        graph[start_cs][end_cs] = pipes[pipe_id].getLength();
         using_pipes.insert(pipe_id);
 
         pipes[pipe_id].cs_in = start_cs;
