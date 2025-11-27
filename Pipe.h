@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <string>
+#include <limits>
 
 class Pipe {
     std::string name;
@@ -15,6 +16,13 @@ public:
     std::string getName() { return name; }
 
     double getLength() { return length; }
+
+    double getCost() {
+        if (status == 1) {
+            return std::numeric_limits<double>::max();
+        }
+        return length; 
+    }
 
     bool getStatus() { return status; }
 

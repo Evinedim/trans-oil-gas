@@ -119,10 +119,10 @@ void Network::deleteZeroDegreeNodes() {
 void Network::initializeNetwork() {
     graph.clear();
     for (auto& [id, pipe] : pipes) {
-        if (pipe.cs_in != 0 && pipe.cs_out != 0 && pipe.getStatus() == 0) {
+        if (pipe.cs_in != 0 && pipe.cs_out != 0) {
             if (pipe.cs_in != pipe.cs_out && stations.contains(pipe.cs_in) && stations.contains(pipe.cs_out)) {
                 graph[pipe.cs_out];
-                graph[pipe.cs_in][pipe.cs_out] = pipe.getLength();
+                graph[pipe.cs_in][pipe.cs_out] = pipe.getCost();
                 using_pipes.insert(id);
             } else {
                 std::cout << std::endl << "Pipe [" << id << "] will be disabled from network!!!" << std::endl;
