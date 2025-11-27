@@ -119,12 +119,10 @@ int main() {
                             }
                             case 5: {
                                 deleteObjectById(pipes);
-                                network.initializeNetwork();
                                 break;
                             }
                             case 6: {
                                 pipes.clear();
-                                network.initializeNetwork();
                                 break;
                             }
                             case 0:
@@ -132,6 +130,7 @@ int main() {
                         }
 
                         if (pipe_choice != 0) {
+                            network.initializeNetwork();
                             std::cout << std::endl << "Return to pipes menu!" << std::endl;
                         }
 
@@ -178,12 +177,10 @@ int main() {
                             }
                             case 4: {
                                 deleteObjectById(stations);
-                                network.initializeNetwork();
                                 break;
                             }
                             case 5: {
                                 stations.clear();
-                                network.initializeNetwork();
                                 break;
                             }
                             case 0:
@@ -191,6 +188,7 @@ int main() {
                         }
 
                         if (station_choice != 0) {
+                            network.initializeNetwork();
                             std::cout << std::endl << "Return to stations menu!" << std::endl;
                         }
                     } while (station_choice != 0);

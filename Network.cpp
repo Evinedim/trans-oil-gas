@@ -119,7 +119,7 @@ void Network::deleteZeroDegreeNodes() {
 void Network::initializeNetwork() {
     graph.clear();
     for (auto& [id, pipe] : pipes) {
-        if (pipe.cs_in != 0 && pipe.cs_out != 0) {
+        if (pipe.cs_in != 0 && pipe.cs_out != 0 && pipe.getStatus() == 0) {
             if (pipe.cs_in != pipe.cs_out && stations.contains(pipe.cs_in) && stations.contains(pipe.cs_out)) {
                 graph[pipe.cs_out];
                 graph[pipe.cs_in][pipe.cs_out] = pipe.getLength();
@@ -164,7 +164,7 @@ void Network::createConnection() {
         }
 
         for (auto& [id, pipe] : pipes) {
-            if (!using_pipes.contains(id)) {
+            if (!using_pipes.contains(id) && pipe.getStatus() == 0) {
                 std::cout << std::endl << id;
                 pipe.getInfo();
             }

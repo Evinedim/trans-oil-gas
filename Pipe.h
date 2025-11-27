@@ -16,7 +16,7 @@ public:
 
     double getLength() { return length; }
 
-    int getStatus() { return status; }
+    bool getStatus() { return status; }
 
     void getInfo();
 
